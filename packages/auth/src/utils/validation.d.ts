@@ -76,11 +76,11 @@ export declare const mfaVerificationSchema: z.ZodObject<{
     type: z.ZodEnum<["totp", "recovery"]>;
 }, "strip", z.ZodTypeAny, {
     userId: string;
-    type: "recovery" | "totp";
+    type: "totp" | "recovery";
     code: string;
 }, {
     userId: string;
-    type: "recovery" | "totp";
+    type: "totp" | "recovery";
     code: string;
 }>;
 /**

@@ -23,12 +23,10 @@ import {
   boolean,
   integer,
   jsonb,
-  bytea,
   index,
   uniqueIndex,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
-import type { UserStatus, DocumentStatus, AuditAction, ResourceType } from '@zero/shared';
 
 // ============================================================================
 // TABELA: USERS

@@ -137,10 +137,12 @@ exports.AuthService = {
         }
         // Criar usuário
         const userId = (0, shared_1.generateUUID)();
+        const salt = (0, crypto_1.generateSalt)();
         const newUser = {
             id: userId,
             email: normalizedEmail,
-            passwordHash,
+            passwordHash: hash,
+            passwordSalt: salt,
             displayName: input.displayName?.trim() || null,
             recoveryEmail: input.recoveryEmail ? (0, validation_1.normalizeEmail)(input.recoveryEmail) : null,
             status: 'pending_mfa', // Requer setup de MFA após registro
@@ -350,7 +352,7 @@ exports.AuthService = {
             await db.insert(database_1.schema.sessions).values({
                 id: sessionId,
                 userId: user.id,
-                refreshTokenHash: await sha256(tokens.refreshToken),
+                refreshTokenHash: await (0, crypto_1.sha256)(tokens.refreshToken),
                 expiresAt: tokens.expiresAt,
                 refreshExpiresAt: tokens.refreshExpiresAt,
                 createdAt: new Date(),

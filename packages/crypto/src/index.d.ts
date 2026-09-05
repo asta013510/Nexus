@@ -27,7 +27,7 @@ export declare function verifyPassword(password: string, hash: string): Promise<
 /**
  * Verifica se hash precisa ser re-hash (para upgrade de parâmetros)
  */
-export declare function needsRehash(hash: string): boolean;
+export declare function needsRehash(hash: string): Promise<boolean>;
 /**
  * Gera token seguro aleatório
  */
@@ -49,6 +49,10 @@ export declare function generateTOTPSecret(): {
     digits: number;
     period: number;
 };
+/**
+ * Gera código TOTP para um tempo específico (usado internamente)
+ */
+export declare function generateTOTP(secret: string, timeStep?: number): Promise<string>;
 /**
  * Verifica código TOTP
  * SECURITY: Constant-time comparison
@@ -82,7 +86,6 @@ export declare function encrypt(data: string, key: CryptoKey): Promise<{
  * Decripta dados usando AES-256-GCM
  */
 export declare function decrypt(ciphertext: string, iv: string, tag: string, key: CryptoKey): Promise<string>;
-export { hashPassword, verifyPassword, needsRehash, generateSalt, sha256, generateTOTPSecret, verifyTOTP, generateRecoveryCodes, timingSafeCompare, };
 declare const _default: {
     hashPassword: typeof hashPassword;
     verifyPassword: typeof verifyPassword;
@@ -102,6 +105,7 @@ declare const _default: {
     };
     sha256: typeof sha256;
     generateTOTPSecret: typeof generateTOTPSecret;
+    generateTOTP: typeof generateTOTP;
     verifyTOTP: typeof verifyTOTP;
     generateRecoveryCodes: typeof generateRecoveryCodes;
     timingSafeCompare: typeof timingSafeCompare;

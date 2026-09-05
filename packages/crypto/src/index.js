@@ -57,8 +57,14 @@ export async function verifyPassword(password, hash) {
 /**
  * Verifica se hash precisa ser re-hash (para upgrade de parâmetros)
  */
-export function needsRehash(hash) {
-    return argon2.verify(hash, 'dummy').catch(() => true);
+export async function needsRehash(hash) {
+    try {
+        await argon2.verify(hash, 'dummy');
+        return false;
+    }
+    catch {
+        return true;
+    }
 }
 // ============================================================================
 // UTILITÁRIOS CRIPTOGRÁFICOS
@@ -118,6 +124,23 @@ export function generateTOTPSecret() {
     };
 }
 /**
+ * Gera código TOTP para um tempo específico (usado internamente)
+ */
+export async function generateTOTP(secret, timeStep) {
+    const now = timeStep || Math.floor(Date.now() / 1000);
+    const period = 30;
+    // Decodificar secret base32
+    const base32Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+    const secretBytes = new Uint8Array(secret.length);
+    for (let i = 0; i < secret.length; i++) {
+        const idx = base32Chars.indexOf(secret[i].toUpperCase());
+        if (idx === -1)
+            throw new Error('Invalid base32 secret');
+        secretBytes[i] = idx;
+    }
+    return generateTOTPForTime(secretBytes, now, period);
+}
+/**
  * Verifica código TOTP
  * SECURITY: Constant-time comparison
  */
@@ -145,15 +168,16 @@ export async function verifyTOTP(secret, code, window = 1) {
     return false;
 }
 async function generateTOTPForTime(secret, timeStep, period) {
-    const counter = Math.floor(timeStep / period);
+    const counterValue = Math.floor(timeStep / period);
     const counterBytes = new Uint8Array(8);
     // Big-endian counter
+    let counter = counterValue;
     for (let i = 7; i >= 0; i--) {
         counterBytes[i] = counter & 0xff;
         counter >>= 8;
     }
     // HMAC-SHA256
-    const key = await crypto.subtle.importKey('raw', secret, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+    const key = await crypto.subtle.importKey('raw', secret.buffer, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
     const signature = await crypto.subtle.sign('HMAC', key, counterBytes);
     const sigBytes = new Uint8Array(signature);
     // Dynamic truncation (RFC 4226)
@@ -268,6 +292,7 @@ export default {
     ARGON2_CONFIG,
     sha256,
     generateTOTPSecret,
+    generateTOTP,
     verifyTOTP,
     generateRecoveryCodes,
     timingSafeCompare,

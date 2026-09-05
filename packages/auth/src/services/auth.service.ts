@@ -10,7 +10,7 @@
  */
 
 import { eq } from 'drizzle-orm';
-import { hashPassword, verifyPassword } from '@zero/crypto';
+import { hashPassword, verifyPassword, generateSalt, sha256 } from '@zero/crypto';
 import { schema, type NewUser, type User as DBUser } from '@zero/database';
 import { generateUUID } from '@zero/shared';
 import { AUTH_CONSTANTS } from '../constants';
@@ -151,10 +151,12 @@ export const AuthService = {
 
     // Criar usuário
     const userId = generateUUID();
+    const salt = generateSalt();
     const newUser: NewUser = {
       id: userId,
       email: normalizedEmail,
-      passwordHash,
+      passwordHash: hash,
+      passwordSalt: salt,
       displayName: input.displayName?.trim() || null,
       recoveryEmail: input.recoveryEmail ? normalizeEmail(input.recoveryEmail) : null,
       status: 'pending_mfa', // Requer setup de MFA após registro

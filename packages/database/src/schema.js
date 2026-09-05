@@ -40,11 +40,11 @@ exports.users = (0, pg_core_1.pgTable)('users', {
     createdAt: (0, pg_core_1.timestamp)('created_at').notNull().defaultNow(),
     updatedAt: (0, pg_core_1.timestamp)('updated_at').notNull().defaultNow(),
     deletedAt: (0, pg_core_1.timestamp)('deleted_at'), // Soft delete para conta
-}, (table) => [
-    (0, pg_core_1.uniqueIndex)('users_email_unique').on(table.email),
-    (0, pg_core_1.index)('users_status_idx').on(table.status),
-    (0, pg_core_1.index)('users_created_at_idx').on(table.createdAt),
-]);
+}, (table) => ({
+    emailUnique: (0, pg_core_1.uniqueIndex)('users_email_unique').on(table.email),
+    statusIdx: (0, pg_core_1.index)('users_status_idx').on(table.status),
+    createdAtIdx: (0, pg_core_1.index)('users_created_at_idx').on(table.createdAt),
+}));
 // ============================================================================
 // TABELA: SESSIONS
 // ============================================================================
@@ -62,11 +62,11 @@ exports.sessions = (0, pg_core_1.pgTable)('sessions', {
     ipAddress: (0, pg_core_1.varchar)('ip_address', { length: 45 }), // IPv6 max
     userAgent: (0, pg_core_1.text)('user_agent'),
     createdAt: (0, pg_core_1.timestamp)('created_at').notNull().defaultNow(),
-}, (table) => [
-    (0, pg_core_1.index)('sessions_user_id_idx').on(table.userId),
-    (0, pg_core_1.index)('sessions_expires_at_idx').on(table.expiresAt),
-    (0, pg_core_1.index)('sessions_revoked_idx').on(table.revoked),
-]);
+}, (table) => ({
+    index() { }, : .on(table.userId),
+    index() { }, : .on(table.expiresAt),
+    index() { }, : .on(table.revoked),
+}));
 // ============================================================================
 // TABELA: DEVICES
 // ============================================================================
@@ -83,10 +83,10 @@ exports.devices = (0, pg_core_1.pgTable)('devices', {
     ipAddress: (0, pg_core_1.varchar)('ip_address', { length: 45 }),
     userAgent: (0, pg_core_1.text)('user_agent'),
     createdAt: (0, pg_core_1.timestamp)('created_at').notNull().defaultNow(),
-}, (table) => [
-    (0, pg_core_1.index)('devices_user_id_idx').on(table.userId),
-    (0, pg_core_1.index)('devices_is_trusted_idx').on(table.isTrusted),
-]);
+}, (table) => ({
+    index() { }, : .on(table.userId),
+    index() { }, : .on(table.isTrusted),
+}));
 // ============================================================================
 // TABELA: FOLDERS
 // ============================================================================
@@ -102,11 +102,11 @@ exports.folders = (0, pg_core_1.pgTable)('folders', {
     createdAt: (0, pg_core_1.timestamp)('created_at').notNull().defaultNow(),
     updatedAt: (0, pg_core_1.timestamp)('updated_at').notNull().defaultNow(),
     deletedAt: (0, pg_core_1.timestamp)('deleted_at'),
-}, (table) => [
-    (0, pg_core_1.index)('folders_user_id_idx').on(table.userId),
-    (0, pg_core_1.index)('folders_parent_id_idx').on(table.parentId),
-    (0, pg_core_1.index)('folders_deleted_at_idx').on(table.deletedAt),
-]);
+}, (table) => ({
+    index() { }, : .on(table.userId),
+    index() { }, : .on(table.parentId),
+    index() { }, : .on(table.deletedAt),
+}));
 // ============================================================================
 // TABELA: DOCUMENTS
 // ============================================================================
@@ -130,13 +130,13 @@ exports.documents = (0, pg_core_1.pgTable)('documents', {
     createdAt: (0, pg_core_1.timestamp)('created_at').notNull().defaultNow(),
     updatedAt: (0, pg_core_1.timestamp)('updated_at').notNull().defaultNow(),
     deletedAt: (0, pg_core_1.timestamp)('deleted_at'), // Soft delete
-}, (table) => [
-    (0, pg_core_1.index)('documents_user_id_idx').on(table.userId),
-    (0, pg_core_1.index)('documents_folder_id_idx').on(table.folderId),
-    (0, pg_core_1.index)('documents_status_idx').on(table.status),
-    (0, pg_core_1.index)('documents_deleted_at_idx').on(table.deletedAt),
-    (0, pg_core_1.index)('documents_created_at_idx').on(table.createdAt),
-]);
+}, (table) => ({
+    index() { }, : .on(table.userId),
+    index() { }, : .on(table.folderId),
+    index() { }, : .on(table.status),
+    index() { }, : .on(table.deletedAt),
+    index() { }, : .on(table.createdAt),
+}));
 // ============================================================================
 // TABELA: DOCUMENT_VERSIONS
 // ============================================================================
@@ -153,11 +153,11 @@ exports.documentVersions = (0, pg_core_1.pgTable)('document_versions', {
     encryptionKeyId: (0, pg_core_1.uuid)('encryption_key_id').references(() => exports.encryptionKeys.id),
     changeDescription: (0, pg_core_1.text)('change_description'),
     createdAt: (0, pg_core_1.timestamp)('created_at').notNull().defaultNow(),
-}, (table) => [
-    (0, pg_core_1.index)('document_versions_document_id_idx').on(table.documentId),
-    (0, pg_core_1.index)('document_versions_user_id_idx').on(table.userId),
-    (0, pg_core_1.uniqueIndex)('document_versions_doc_version_unique').on(table.documentId, table.version),
-]);
+}, (table) => ({
+    index() { }, : .on(table.documentId),
+    index() { }, : .on(table.userId),
+    uniqueIndex() { }, : .on(table.documentId, table.version),
+}));
 // ============================================================================
 // TABELA: AUDIT_LOGS
 // ============================================================================
@@ -177,12 +177,12 @@ exports.auditLogs = (0, pg_core_1.pgTable)('audit_logs', {
     metadata: (0, pg_core_1.jsonb)('metadata'), // Dados adicionais estruturados
     // Nota: NUNCA armazenar dados sensíveis nos logs
     // Senhas, tokens, chaves, dados biométricos - PROIBIDO
-}, (table) => [
-    (0, pg_core_1.index)('audit_logs_user_id_idx').on(table.userId),
-    (0, pg_core_1.index)('audit_logs_action_idx').on(table.action),
-    (0, pg_core_1.index)('audit_logs_timestamp_idx').on(table.timestamp),
-    (0, pg_core_1.index)('audit_logs_resource_idx').on(table.resourceType, table.resourceId),
-]);
+}, (table) => ({
+    index() { }, : .on(table.userId),
+    index() { }, : .on(table.action),
+    index() { }, : .on(table.timestamp),
+    index() { }, : .on(table.resourceType, table.resourceId),
+}));
 // ============================================================================
 // TABELA: RECOVERY_CODES
 // ============================================================================
@@ -195,10 +195,10 @@ exports.recoveryCodes = (0, pg_core_1.pgTable)('recovery_codes', {
     usedAt: (0, pg_core_1.timestamp)('used_at'),
     createdAt: (0, pg_core_1.timestamp)('created_at').notNull().defaultNow(),
     expiresAt: (0, pg_core_1.timestamp)('expires_at'), // Opcional
-}, (table) => [
-    (0, pg_core_1.index)('recovery_codes_user_id_idx').on(table.userId),
-    (0, pg_core_1.index)('recovery_codes_used_idx').on(table.used),
-]);
+}, (table) => ({
+    index() { }, : .on(table.userId),
+    index() { }, : .on(table.used),
+}));
 // ============================================================================
 // TABELA: WEBAUTHN_CREDENTIALS
 // ============================================================================
@@ -213,10 +213,10 @@ exports.webauthnCredentials = (0, pg_core_1.pgTable)('webauthn_credentials', {
     deviceType: (0, pg_core_1.varchar)('device_type', { length: 50 }),
     createdAt: (0, pg_core_1.timestamp)('created_at').notNull().defaultNow(),
     lastUsedAt: (0, pg_core_1.timestamp)('last_used_at'),
-}, (table) => [
-    (0, pg_core_1.index)('webauthn_credentials_user_id_idx').on(table.userId),
-    (0, pg_core_1.uniqueIndex)('webauthn_credentials_credential_id_unique').on(table.credentialId),
-]);
+}, (table) => ({
+    index() { }, : .on(table.userId),
+    uniqueIndex() { }, : .on(table.credentialId),
+}));
 // ============================================================================
 // TABELA: ENCRYPTION_KEYS
 // ============================================================================
@@ -236,10 +236,10 @@ exports.encryptionKeys = (0, pg_core_1.pgTable)('encryption_keys', {
     createdAt: (0, pg_core_1.timestamp)('created_at').notNull().defaultNow(),
     expiresAt: (0, pg_core_1.timestamp)('expires_at'),
     revokedAt: (0, pg_core_1.timestamp)('revoked_at'),
-}, (table) => [
-    (0, pg_core_1.index)('encryption_keys_user_id_idx').on(table.userId),
-    (0, pg_core_1.index)('encryption_keys_key_type_idx').on(table.keyType),
-]);
+}, (table) => ({
+    index() { }, : .on(table.userId),
+    index() { }, : .on(table.keyType),
+}));
 // ============================================================================
 // RELATIONS
 // ============================================================================

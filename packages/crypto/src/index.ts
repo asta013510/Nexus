@@ -70,8 +70,13 @@ export async function verifyPassword(
 /**
  * Verifica se hash precisa ser re-hash (para upgrade de parâmetros)
  */
-export function needsRehash(hash: string): boolean {
-  return argon2.verify(hash, 'dummy').catch(() => true);
+export async function needsRehash(hash: string): Promise<boolean> {
+  try {
+    await argon2.verify(hash, 'dummy');
+    return false;
+  } catch {
+    return true;
+  }
 }
 
 // ============================================================================
@@ -139,6 +144,25 @@ export function generateTOTPSecret(): { secret: string; algorithm: string; digit
 }
 
 /**
+ * Gera código TOTP para um tempo específico (usado internamente)
+ */
+export async function generateTOTP(secret: string, timeStep?: number): Promise<string> {
+  const now = timeStep || Math.floor(Date.now() / 1000);
+  const period = 30;
+  
+  // Decodificar secret base32
+  const base32Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  const secretBytes = new Uint8Array(secret.length);
+  for (let i = 0; i < secret.length; i++) {
+    const idx = base32Chars.indexOf(secret[i].toUpperCase());
+    if (idx === -1) throw new Error('Invalid base32 secret');
+    secretBytes[i] = idx;
+  }
+  
+  return generateTOTPForTime(secretBytes, now, period);
+}
+
+/**
  * Verifica código TOTP
  * SECURITY: Constant-time comparison
  */
@@ -170,10 +194,11 @@ export async function verifyTOTP(secret: string, code: string, window: number = 
 }
 
 async function generateTOTPForTime(secret: Uint8Array, timeStep: number, period: number): Promise<string> {
-  const counter = Math.floor(timeStep / period);
+  const counterValue = Math.floor(timeStep / period);
   const counterBytes = new Uint8Array(8);
   
   // Big-endian counter
+  let counter = counterValue;
   for (let i = 7; i >= 0; i--) {
     counterBytes[i] = counter & 0xff;
     counter >>= 8;
@@ -181,8 +206,8 @@ async function generateTOTPForTime(secret: Uint8Array, timeStep: number, period:
   
   // HMAC-SHA256
   const key = await crypto.subtle.importKey(
-    'raw',
-    secret,
+    'raw' as const,
+    secret.buffer as ArrayBuffer,
     { name: 'HMAC', hash: 'SHA-256' },
     false,
     ['sign']
@@ -255,7 +280,11 @@ export async function hashIdentifier(identifier: string, salt: string): Promise<
 /**
  * Deriva chave de encryption a partir de master key
  */
-export async function deriveKey(masterKey: string, salt: string, purpose: string): Promise<CryptoKey> {
+export async function deriveKey(
+  masterKey: string,
+  salt: string,
+  purpose: string
+): Promise<CryptoKey> {
   const encoder = new TextEncoder();
   const keyMaterial = await crypto.subtle.importKey(
     'raw',
@@ -282,7 +311,10 @@ export async function deriveKey(masterKey: string, salt: string, purpose: string
 /**
  * Encripta dados usando AES-256-GCM
  */
-export async function encrypt(data: string, key: CryptoKey): Promise<{
+export async function encrypt(
+  data: string,
+  key: CryptoKey
+): Promise<{
   ciphertext: string;
   iv: string;
   tag: string;
@@ -352,6 +384,7 @@ export default {
   ARGON2_CONFIG,
   sha256,
   generateTOTPSecret,
+  generateTOTP,
   verifyTOTP,
   generateRecoveryCodes,
   timingSafeCompare,
