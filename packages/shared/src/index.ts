@@ -292,14 +292,14 @@ export function sanitizeFilename(filename: string): string {
  * Verifica se um MIME type é permitido
  */
 export function isMimeTypeAllowed(mimeType: string): boolean {
-  return SECURITY_CONSTANTS.ALLOWED_MIME_TYPES.includes(mimeType.toLowerCase());
+  return SECURITY_CONSTANTS.ALLOWED_MIME_TYPES.includes(mimeType.toLowerCase() as any);
 }
 
 /**
  * Verifica se uma extensão é bloqueada
  */
 export function isExtensionBlocked(extension: string): boolean {
-  return SECURITY_CONSTANTS.BLOCKED_EXTENSIONS.includes(extension.toLowerCase());
+  return SECURITY_CONSTANTS.BLOCKED_EXTENSIONS.includes(extension.toLowerCase() as any);
 }
 
 export default {

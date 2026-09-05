@@ -59,11 +59,44 @@ export interface MFAVerifyResponse {
 // RESPOSTAS DE AUTENTICAÇÃO
 // ============================================================================
 
+
+// ============================================================================
+// REQUEST TYPES (para Express)
+// ============================================================================
+
+import type { Request } from 'express';
+
+export interface AuthRequest extends Request {
+  auth?: {
+    userId: string;
+    sessionId: string;
+    deviceId: string;
+    payload: JWTPayload;
+  };
+}
 export interface AuthResponse {
   success: boolean;
+  status?: 'pending_mfa' | 'completed' | 'locked' | 'failed';
   requiresMFA?: boolean;
   userId?: string;
+  user?: {
+    id: string;
+    email: string;
+    name: string | null;
+  };
+  tokens?: {
+    accessToken: string;
+    refreshToken: string;
+    expiresAt: Date;
+    refreshExpiresAt: Date;
+  };
   session?: SessionData;
+  mfaSessionId?: string;
+  mfaType?: 'totp' | 'recovery';
+  mfaSecret?: string;
+  mfaQrCode?: string;
+  recoveryCodes?: string[];
+  lockedUntil?: Date;
   error?: AuthError;
 }
 

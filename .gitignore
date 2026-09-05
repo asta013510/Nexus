@@ -1,64 +1,22 @@
 ```
-# TypeScript/JavaScript build outputs
-*.js
-*.ts
-*.d.ts
-*.js.map
-*.ts.map
-*.d.ts.map
+# Compiled and build artifacts
+*.tsbuildinfo
+dist/
+build/
 
 # Dependencies
 node_modules/
 
-# Environment variables
+# Logs and temp files
+*.log
+*.tmp
+
+# Editors
+.vscode/
+.idea/
+
+# Environment
 .env
 .env.local
 *.env.*
-
-# IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Logs
-*.log
-
-# Temp files
-*.tmp
-
-# Build directories
-dist/
-build/
-target/
-
-# Python cache (if any Python files exist in the project)
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# Coverage reports
-coverage/
-htmlcov/
-*.coverage
-
-# Testing
-.nyc_output/
-.mypy_cache/
-.pytest_cache/
-.jest/
-
-# OS generated files
-.DS_Store
-Thumbs.db
-
-# Archives
-*.zip
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.gz
-*.rar
-*.7z
 ```

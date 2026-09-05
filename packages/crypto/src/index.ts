@@ -334,18 +334,6 @@ export async function decrypt(
   return decoder.decode(decrypted);
 }
 
-export { 
-  hashPassword, 
-  verifyPassword, 
-  needsRehash, 
-  generateSalt,
-  sha256,
-  generateTOTPSecret,
-  verifyTOTP,
-  generateRecoveryCodes,
-  timingSafeCompare,
-};
-
 // ============================================================================
 // EXPORTS
 // ============================================================================
