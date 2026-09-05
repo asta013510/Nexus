@@ -129,6 +129,10 @@ async function bootstrap() {
   // ROTAS
   // ===========================================================================
 
+  // ===========================================================================
+  // ROTAS
+  // ===========================================================================
+
   // Health check (pública)
   app.get('/health', async (req, res) => {
     const dbHealthy = await checkDatabaseHealth();
@@ -158,9 +162,18 @@ async function bootstrap() {
     });
   });
 
-  // Mount routes (futuro)
-  // app.use('/api/auth', authRoutes);
-  // app.use('/api/documents', documentRoutes);
+  // Mount routes de autenticação
+  import('./routes/auth.js').then(({ authRoutes }) => {
+    app.use('/api/auth', authRoutes);
+    console.log('✅ Rotas de autenticação carregadas');
+  }).catch((error) => {
+    console.error('❌ Erro ao carregar rotas de autenticação:', error);
+  });
+
+  // TODO: Mount routes de documentos (futuro)
+  // import('./routes/documents.js').then(({ documentRoutes }) => {
+  //   app.use('/api/documents', documentRoutes);
+  // });
 
   // 404 handler
   app.use((req, res) => {

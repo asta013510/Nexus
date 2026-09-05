@@ -10,7 +10,7 @@
  */
 
 import { eq } from 'drizzle-orm';
-import { sha256, argon2idHash, argon2idVerify, timingSafeCompare } from '@zero/crypto';
+import { hashPassword, verifyPassword } from '@zero/crypto';
 import { schema, type NewUser, type User as DBUser } from '@zero/database';
 import { generateUUID } from '@zero/shared';
 import { AUTH_CONSTANTS } from '../constants';
@@ -133,7 +133,7 @@ export const AuthService = {
     // Hash da senha com Argon2id
     let passwordHash: string;
     try {
-      passwordHash = await argon2idHash(input.password);
+      passwordHash = await hashPassword(input.password);
     } catch (error) {
       await this.auditLog({
         action: 'REGISTER_FAILURE',

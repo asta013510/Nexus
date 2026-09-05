@@ -100,6 +100,144 @@ export function generateNumericCode(digits: number = 6): string {
 }
 
 /**
+ * Hash SHA-256 seguro para dados não-sensíveis
+ */
+export async function sha256(data: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const hashBuffer = await crypto.subtle.digest('SHA-256', encoder.encode(data));
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+/**
+ * Gera secret TOTP e retorna em formato base32
+ */
+export function generateTOTPSecret(): { secret: string; algorithm: string; digits: number; period: number } {
+  // Gerar 20 bytes aleatórios para secret base32
+  const bytes = crypto.getRandomValues(new Uint8Array(20));
+  const base32Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  let secret = '';
+  
+  for (let i = 0; i < bytes.length; i += 5) {
+    const chunk = bytes.subarray(i, Math.min(i + 5, bytes.length));
+    // Converter para base32 simplificado
+    for (let j = 0; j < chunk.length; j++) {
+      const val = chunk[j];
+      secret += base32Chars.charAt((val >> 3) & 0x1F);
+      if (j < chunk.length - 1 || (i + 5) < bytes.length) {
+        secret += base32Chars.charAt(((val & 0x07) << 2) | ((chunk[j + 1] ?? 0) >> 6));
+      }
+    }
+  }
+  
+  return {
+    secret: secret.slice(0, 32), // 32 caracteres
+    algorithm: 'SHA-256',
+    digits: 6,
+    period: 30,
+  };
+}
+
+/**
+ * Verifica código TOTP
+ * SECURITY: Constant-time comparison
+ */
+export async function verifyTOTP(secret: string, code: string, window: number = 1): Promise<boolean> {
+  const now = Math.floor(Date.now() / 1000);
+  const period = 30;
+  
+  // Decodificar secret base32
+  const base32Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  const secretBytes = new Uint8Array(secret.length);
+  for (let i = 0; i < secret.length; i++) {
+    const idx = base32Chars.indexOf(secret[i].toUpperCase());
+    if (idx === -1) throw new Error('Invalid base32 secret');
+    secretBytes[i] = idx;
+  }
+  
+  // Verificar em uma janela de tempo (para compensar clock skew)
+  for (let i = -window; i <= window; i++) {
+    const timeStep = now + (i * period);
+    const expectedCode = await generateTOTPForTime(secretBytes, timeStep, period);
+    
+    // Constant-time comparison
+    if (timingSafeCompare(code.padStart(6, '0'), expectedCode)) {
+      return true;
+    }
+  }
+  
+  return false;
+}
+
+async function generateTOTPForTime(secret: Uint8Array, timeStep: number, period: number): Promise<string> {
+  const counter = Math.floor(timeStep / period);
+  const counterBytes = new Uint8Array(8);
+  
+  // Big-endian counter
+  for (let i = 7; i >= 0; i--) {
+    counterBytes[i] = counter & 0xff;
+    counter >>= 8;
+  }
+  
+  // HMAC-SHA256
+  const key = await crypto.subtle.importKey(
+    'raw',
+    secret,
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+  
+  const signature = await crypto.subtle.sign('HMAC', key, counterBytes);
+  const sigBytes = new Uint8Array(signature);
+  
+  // Dynamic truncation (RFC 4226)
+  const offset = sigBytes[sigBytes.length - 1] & 0x0f;
+  const binary = ((sigBytes[offset] & 0x7f) << 24) |
+                 ((sigBytes[offset + 1] & 0xff) << 16) |
+                 ((sigBytes[offset + 2] & 0xff) << 8) |
+                 (sigBytes[offset + 3] & 0xff);
+  
+  const otp = (binary % 1000000).toString().padStart(6, '0');
+  return otp;
+}
+
+/**
+ * Gera recovery codes
+ */
+export function generateRecoveryCodes(count: number = 10): string[] {
+  const codes: string[] = [];
+  for (let i = 0; i < count; i++) {
+    // Formato: XXXX-YYYY-ZZZZ (12 dígitos)
+    const part1 = generateNumericCode(4);
+    const part2 = generateNumericCode(4);
+    const part3 = generateNumericCode(4);
+    codes.push(`${part1}-${part2}-${part3}`);
+  }
+  return codes;
+}
+
+/**
+ * Comparison constante para prevenir timing attacks
+ */
+export function timingSafeCompare(a: string, b: string): boolean {
+  const encoder = new TextEncoder();
+  const aBytes = encoder.encode(a);
+  const bBytes = encoder.encode(b);
+  
+  if (aBytes.length !== bBytes.length) {
+    return false;
+  }
+  
+  let result = 0;
+  for (let i = 0; i < aBytes.length; i++) {
+    result |= aBytes[i] ^ bBytes[i];
+  }
+  
+  return result === 0;
+}
+
+/**
  * Hash seguro para dados não-sensíveis (ex: identificar email sem expor)
  */
 export async function hashIdentifier(identifier: string, salt: string): Promise<string> {
@@ -196,6 +334,18 @@ export async function decrypt(
   return decoder.decode(decrypted);
 }
 
+export { 
+  hashPassword, 
+  verifyPassword, 
+  needsRehash, 
+  generateSalt,
+  sha256,
+  generateTOTPSecret,
+  verifyTOTP,
+  generateRecoveryCodes,
+  timingSafeCompare,
+};
+
 // ============================================================================
 // EXPORTS
 // ============================================================================
@@ -212,4 +362,9 @@ export default {
   encrypt,
   decrypt,
   ARGON2_CONFIG,
+  sha256,
+  generateTOTPSecret,
+  verifyTOTP,
+  generateRecoveryCodes,
+  timingSafeCompare,
 };
