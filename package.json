@@ -1,0 +1,50 @@
+{
+  "name": "zero",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ZERO - Central de Segurança Pessoal",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:api\" \"npm run dev:web\"",
+    "dev:api": "npm run dev --workspace=@zero/api",
+    "dev:web": "npm run dev --workspace=@zero/web",
+    "build": "npm run build --workspaces",
+    "build:api": "npm run build --workspace=@zero/api",
+    "build:web": "npm run build --workspace=@zero/web",
+    "test": "npm run test --workspaces",
+    "test:unit": "npm run test:unit --workspaces",
+    "test:e2e": "npm run test:e2e --workspace=@zero/tests",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "typecheck": "tsc --noEmit --project tsconfig.json",
+    "db:migrate": "npm run migrate --workspace=@zero/database",
+    "db:seed": "npm run seed --workspace=@zero/database",
+    "db:studio": "npm run studio --workspace=@zero/database",
+    "docker:up": "docker-compose -f infrastructure/docker-compose.yml up -d",
+    "docker:down": "docker-compose -f infrastructure/docker-compose.yml down",
+    "docker:logs": "docker-compose -f infrastructure/docker-compose.yml logs -f",
+    "security:audit": "npm audit --audit-level=high",
+    "security:check": "npm run security:audit && npm run lint"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.54.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-security": "^2.0.0",
+    "prettier": "^3.1.0",
+    "typescript": "^5.3.2"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "volta": {
+    "node": "20.10.0"
+  }
+}

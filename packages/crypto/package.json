@@ -1,0 +1,21 @@
+{
+  "name": "@zero/crypto",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint src --ext .ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@noble/hashes": "^1.3.2",
+    "tweetnacl": "^1.0.3"
+  },
+  "devDependencies": {
+    "vitest": "^1.0.4",
+    "@types/node": "^20.10.0"
+  }
+}
