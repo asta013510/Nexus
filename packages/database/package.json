@@ -13,13 +13,13 @@
     "generate": "drizzle-kit generate:pg"
   },
   "dependencies": {
+    "@zero/shared": "*",
     "drizzle-orm": "^0.29.1",
-    "postgres": "^3.4.0",
-    "@zero/shared": "*"
+    "postgres": "^3.4.9"
   },
   "devDependencies": {
-    "drizzle-kit": "^0.20.9",
-    "vitest": "^1.0.4",
-    "@types/node": "^20.10.0"
+    "@types/node": "^20.10.0",
+    "drizzle-kit": "^0.20.18",
+    "vitest": "^1.0.4"
   }
 }
