@@ -40,6 +40,21 @@ export interface WebAuthnLoginInput {
   deviceName?: string;
 }
 
+export interface MFASetupResponse {
+  success: boolean;
+  totpSecret?: string;
+  otpauthURI?: string;
+  requiresVerification?: boolean;
+  error?: AuthError;
+}
+
+export interface MFAVerifyResponse {
+  success: boolean;
+  session?: SessionData;
+  recoveryCodes?: string[];
+  error?: AuthError;
+}
+
 // ============================================================================
 // RESPOSTAS DE AUTENTICAÇÃO
 // ============================================================================
