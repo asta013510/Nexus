@@ -31,3 +31,9 @@ export type {
   EncryptionKey,
   NewEncryptionKey,
 } from './schema';
+
+// Database connection helper (será implementado na API)
+export function createDatabaseClient(connectionString: string) {
+  // Implementação será feita no pacote da API
+  throw new Error('Database client deve ser inicializado pela API');
+}
