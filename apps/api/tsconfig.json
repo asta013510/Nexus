@@ -25,7 +25,6 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist",
-    "rootDir": "./src",
     "declaration": true,
     "declarationMap": true,
     "baseUrl": ".",
@@ -34,6 +33,9 @@
     },
     "types": ["node", "vitest/globals"]
   },
-  "include": ["src/**/*"],
+  "include": [
+    "src/**/*",
+    "../../packages/*/src/**/*"
+  ],
   "exclude": ["node_modules", "dist", "**/*.test.ts"]
 }

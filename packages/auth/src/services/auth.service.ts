@@ -155,7 +155,7 @@ export const AuthService = {
     const newUser: NewUser = {
       id: userId,
       email: normalizedEmail,
-      passwordHash: hash,
+      passwordHash,
       passwordSalt: salt,
       displayName: input.displayName?.trim() || null,
       recoveryEmail: input.recoveryEmail ? normalizeEmail(input.recoveryEmail) : null,
@@ -306,7 +306,7 @@ export const AuthService = {
     }
 
     // Verificar senha com timing-safe comparison
-    const passwordValid = await argon2idVerify(input.password, user.passwordHash);
+    const passwordValid = await verifyPassword(input.password, user.passwordHash);
     
     if (!passwordValid) {
       // Incrementar tentativas falhas
@@ -410,6 +410,9 @@ export const AuthService = {
 
       // Criar/atualizar dispositivo
       let deviceId: string | undefined;
+      const deviceType = this.detectDeviceType(userAgent);
+      const { os, browser } = this.parseUserAgent(userAgent);
+      
       if (input.deviceId) {
         deviceId = input.deviceId;
         await db
@@ -423,8 +426,6 @@ export const AuthService = {
       } else {
         // Criar novo dispositivo
         deviceId = generateUUID();
-        const deviceType = this.detectDeviceType(userAgent);
-        const { os, browser } = this.parseUserAgent(userAgent);
 
         await db.insert(schema.devices).values({
           id: deviceId,

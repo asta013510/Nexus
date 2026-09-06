@@ -366,6 +366,9 @@ export async function decrypt(
   return decoder.decode(decrypted);
 }
 
+// JWT exports
+export { generateAccessToken, generateRefreshToken, verifyJWT, decodeJWT } from './jwt';
+
 // ============================================================================
 // EXPORTS
 // ============================================================================

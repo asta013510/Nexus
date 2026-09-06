@@ -141,7 +141,7 @@ exports.AuthService = {
         const newUser = {
             id: userId,
             email: normalizedEmail,
-            passwordHash: hash,
+            passwordHash,
             passwordSalt: salt,
             displayName: input.displayName?.trim() || null,
             recoveryEmail: input.recoveryEmail ? (0, validation_1.normalizeEmail)(input.recoveryEmail) : null,
@@ -281,7 +281,7 @@ exports.AuthService = {
             };
         }
         // Verificar senha com timing-safe comparison
-        const passwordValid = await argon2idVerify(input.password, user.passwordHash);
+        const passwordValid = await (0, crypto_1.verifyPassword)(input.password, user.passwordHash);
         if (!passwordValid) {
             // Incrementar tentativas falhas
             await this.incrementFailedAttempts(user.id);
@@ -368,6 +368,8 @@ exports.AuthService = {
                 .where((0, drizzle_orm_1.eq)(database_1.schema.users.id, user.id));
             // Criar/atualizar dispositivo
             let deviceId;
+            const deviceType = this.detectDeviceType(userAgent);
+            const { os, browser } = this.parseUserAgent(userAgent);
             if (input.deviceId) {
                 deviceId = input.deviceId;
                 await db
@@ -382,8 +384,6 @@ exports.AuthService = {
             else {
                 // Criar novo dispositivo
                 deviceId = (0, shared_1.generateUUID)();
-                const deviceType = this.detectDeviceType(userAgent);
-                const { os, browser } = this.parseUserAgent(userAgent);
                 await db.insert(database_1.schema.devices).values({
                     id: deviceId,
                     userId: user.id,

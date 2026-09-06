@@ -7,7 +7,7 @@
 
 import { drizzle, PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-import * as schema from '@zero/database/schema';
+import { schema } from '@zero/database';
 import { getConfig, isProduction } from './env.js';
 
 let db: PostgresJsDatabase<typeof schema> | null = null;

@@ -23,6 +23,7 @@ exports.AUTH_CONSTANTS = {
     TOTP_WINDOW: 1, // aceita códigos anterior e próximo (janela de tolerância)
     BACKUP_CODES_COUNT: 10,
     BACKUP_CODES_LENGTH: 8,
+    RECOVERY_CODE_COUNT: 10,
     // Password Requirements (herdados do shared + adicionais)
     MIN_PASSWORD_LENGTH: shared_1.SECURITY_CONSTANTS.MIN_PASSWORD_LENGTH,
     MAX_PASSWORD_LENGTH: 128,

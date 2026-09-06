@@ -15,7 +15,7 @@
  */
 
 import { eq } from 'drizzle-orm';
-import { sha256, generateTOTP, verifyTOTP, generateRecoveryCodes } from '@zero/crypto';
+import { sha256, generateTOTPSecret, verifyTOTP, generateRecoveryCodes } from '@zero/crypto';
 import { schema, type NewRecoveryCode } from '@zero/database';
 import { generateUUID } from '@zero/shared';
 import { AUTH_CONSTANTS } from '../constants';
@@ -68,7 +68,7 @@ export const MFAService = {
       }
 
       // Gerar secret TOTP
-      const totpSecret = generateTOTP();
+      const totpSecret = generateTOTPSecret();
       
       // Criar URI para QR Code (padrão Google Authenticator)
       const issuer = encodeURIComponent('ZERO Security');

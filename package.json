@@ -63,5 +63,8 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "jose": "^6.2.12"
+  }
 }

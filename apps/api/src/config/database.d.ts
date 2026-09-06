@@ -5,7 +5,7 @@
  * SECURITY: Pool configurado com timeouts e SSL quando em produção
  */
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-import * as schema from '@zero/database/schema';
+import { schema } from '@zero/database';
 /**
  * Inicializa a conexão com o banco de dados
  * SECURITY: Configurações hardened para produção

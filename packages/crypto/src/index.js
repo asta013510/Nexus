@@ -275,6 +275,8 @@ export async function decrypt(ciphertext, iv, tag, key) {
     const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: ivBytes }, key, encryptedData);
     return decoder.decode(decrypted);
 }
+// JWT exports
+export { generateAccessToken, generateRefreshToken, verifyJWT, decodeJWT } from './jwt';
 // ============================================================================
 // EXPORTS
 // ============================================================================

@@ -16,6 +16,7 @@ export declare const AUTH_CONSTANTS: {
     readonly TOTP_WINDOW: 1;
     readonly BACKUP_CODES_COUNT: 10;
     readonly BACKUP_CODES_LENGTH: 8;
+    readonly RECOVERY_CODE_COUNT: 10;
     readonly MIN_PASSWORD_LENGTH: 12;
     readonly MAX_PASSWORD_LENGTH: 128;
     readonly SESSION_PREFIX: "sess_";

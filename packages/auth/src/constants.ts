@@ -24,6 +24,7 @@ export const AUTH_CONSTANTS = {
   TOTP_WINDOW: 1, // aceita códigos anterior e próximo (janela de tolerância)
   BACKUP_CODES_COUNT: 10,
   BACKUP_CODES_LENGTH: 8,
+  RECOVERY_CODE_COUNT: 10,
   
   // Password Requirements (herdados do shared + adicionais)
   MIN_PASSWORD_LENGTH: SECURITY_CONSTANTS.MIN_PASSWORD_LENGTH,

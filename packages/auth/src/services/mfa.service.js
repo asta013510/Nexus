@@ -59,7 +59,7 @@ exports.MFAService = {
                 };
             }
             // Gerar secret TOTP
-            const totpSecret = (0, crypto_1.generateTOTP)();
+            const totpSecret = (0, crypto_1.generateTOTPSecret)();
             // Criar URI para QR Code (padrão Google Authenticator)
             const issuer = encodeURIComponent('ZERO Security');
             const label = encodeURIComponent(emailAddress);

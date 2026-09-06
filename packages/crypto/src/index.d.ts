@@ -86,6 +86,7 @@ export declare function encrypt(data: string, key: CryptoKey): Promise<{
  * Decripta dados usando AES-256-GCM
  */
 export declare function decrypt(ciphertext: string, iv: string, tag: string, key: CryptoKey): Promise<string>;
+export { generateAccessToken, generateRefreshToken, verifyJWT, decodeJWT } from './jwt';
 declare const _default: {
     hashPassword: typeof hashPassword;
     verifyPassword: typeof verifyPassword;
