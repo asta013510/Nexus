@@ -1,0 +1,10 @@
+/**
+ * Configuração Centralizada - ZERO API
+ *
+ * Exporta todas as configurações da aplicação
+ */
+export * from './env.js';
+export * from './database.js';
+// Redis será configurado quando necessário
+// MinIO/S3 será configurado no serviço de storage
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi8uLi8uLi9zcmMvY29uZmlnL2luZGV4LnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBOzs7O0dBSUc7QUFFSCxjQUFjLFVBQVUsQ0FBQztBQUN6QixjQUFjLGVBQWUsQ0FBQztBQUU5QiwyQ0FBMkM7QUFDM0Msa0RBQWtEIiwic291cmNlc0NvbnRlbnQiOlsiLyoqXG4gKiBDb25maWd1cmHDp8OjbyBDZW50cmFsaXphZGEgLSBaRVJPIEFQSVxuICogXG4gKiBFeHBvcnRhIHRvZGFzIGFzIGNvbmZpZ3VyYcOnw7VlcyBkYSBhcGxpY2HDp8Ojb1xuICovXG5cbmV4cG9ydCAqIGZyb20gJy4vZW52LmpzJztcbmV4cG9ydCAqIGZyb20gJy4vZGF0YWJhc2UuanMnO1xuXG4vLyBSZWRpcyBzZXLDoSBjb25maWd1cmFkbyBxdWFuZG8gbmVjZXNzw6FyaW9cbi8vIE1pbklPL1MzIHNlcsOhIGNvbmZpZ3VyYWRvIG5vIHNlcnZpw6dvIGRlIHN0b3JhZ2VcbiJdfQ==
