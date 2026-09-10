@@ -21,11 +21,11 @@ export interface MFAVerificationInput {
 }
 export interface WebAuthnRegistrationInput {
     userId: string;
-    credential: PublicKeyCredential;
+    credential: import('crypto').webcrypto.CryptoKey | Record<string, unknown>;
     deviceName: string;
 }
 export interface WebAuthnLoginInput {
-    credential: PublicKeyCredential;
+    credential: import('crypto').webcrypto.CryptoKey | Record<string, unknown>;
     deviceName?: string;
 }
 export interface MFASetupResponse {
@@ -120,6 +120,7 @@ export interface JWTPayload {
     iss: string;
     aud: string;
     mfa: boolean;
+    [key: string]: unknown;
 }
 export interface RefreshTokenPayload {
     sub: string;
@@ -130,6 +131,7 @@ export interface RefreshTokenPayload {
     iss: string;
     aud: string;
     counter: number;
+    [key: string]: unknown;
 }
 export interface AuthAuditEvent {
     action: AuthAuditAction;
@@ -143,7 +145,7 @@ export interface AuthAuditEvent {
     failureReason?: string;
     metadata?: Record<string, unknown>;
 }
-export type AuthAuditAction = 'REGISTER_REQUEST' | 'REGISTER_SUCCESS' | 'REGISTER_FAILURE' | 'LOGIN_REQUEST' | 'LOGIN_SUCCESS' | 'LOGIN_FAILURE_PASSWORD' | 'LOGIN_FAILURE_MFA' | 'LOGIN_FAILURE_LOCKED' | 'LOGOUT_REQUEST' | 'LOGOUT_SUCCESS' | 'TOKEN_REFRESH_SUCCESS' | 'TOKEN_REFRESH_FAILURE' | 'MFA_SETUP_INITIATED' | 'MFA_SETUP_COMPLETED' | 'MFA_VERIFICATION_SUCCESS' | 'MFA_VERIFICATION_FAILURE' | 'MFA_DISABLED' | 'WEBAUTHN_REGISTERED' | 'WEBAUTHN_AUTHENTICATED' | 'DEVICE_TRUSTED' | 'DEVICE_REVOKED' | 'SESSION_REVOKED' | 'PASSWORD_CHANGED' | 'RECOVERY_CODE_USED' | 'ACCOUNT_LOCKED' | 'ACCOUNT_UNLOCKED';
+export type AuthAuditAction = 'REGISTER_REQUEST' | 'REGISTER_SUCCESS' | 'REGISTER_FAILURE' | 'LOGIN_REQUEST' | 'LOGIN_SUCCESS' | 'LOGIN_FAILURE_PASSWORD' | 'LOGIN_FAILURE_MFA' | 'LOGIN_FAILURE_LOCKED' | 'LOGOUT_REQUEST' | 'LOGOUT_SUCCESS' | 'TOKEN_REFRESH_SUCCESS' | 'TOKEN_REFRESH_FAILURE' | 'MFA_SETUP_INITIATED' | 'MFA_SETUP_COMPLETED' | 'MFA_VERIFICATION_SUCCESS' | 'MFA_VERIFICATION_FAILURE' | 'MFA_DISABLED' | 'MFA_ENABLED' | 'WEBAUTHN_REGISTERED' | 'WEBAUTHN_AUTHENTICATED' | 'DEVICE_TRUSTED' | 'DEVICE_REVOKED' | 'SESSION_REVOKED' | 'PASSWORD_CHANGED' | 'RECOVERY_CODE_USED' | 'RECOVERY_CODES_REGENERATED' | 'ACCOUNT_LOCKED' | 'ACCOUNT_UNLOCKED';
 export interface AuthConfig {
     jwtSecret: string;
     jwtIssuer: string;

@@ -246,7 +246,7 @@ exports.SessionService = {
                 await db
                     .update(database_1.schema.sessions)
                     .set({ revoked: true })
-                    .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(database_1.schema.sessions.userId, userId), (0, drizzle_orm_1.eq)(database_1.schema.sessions.id, exceptSessionId ? sql `!= ${exceptSessionId}` : sql `IS NOT NULL`)));
+                    .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(database_1.schema.sessions.userId, userId), sql `${database_1.schema.sessions.id} != ${exceptSessionId}`));
             }
             else {
                 await updateQuery;
@@ -299,7 +299,7 @@ exports.SessionService = {
                 .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(database_1.schema.sessions.userId, userId), (0, drizzle_orm_1.eq)(database_1.schema.sessions.revoked, false)));
             return {
                 success: true,
-                sessions: sessions.map(s => ({
+                sessions: sessions.map((s) => ({
                     sessionId: s.sessionId,
                     createdAt: s.createdAt,
                     expiresAt: s.expiresAt,

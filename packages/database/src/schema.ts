@@ -58,11 +58,11 @@ export const users = pgTable('users', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
   deletedAt: timestamp('deleted_at'), // Soft delete para conta
-}, (table) => [
-  uniqueIndex('users_email_unique').on(table.email),
-  index('users_status_idx').on(table.status),
-  index('users_created_at_idx').on(table.createdAt),
-]);
+}, (table) => ({
+  emailUnique: uniqueIndex('users_email_unique').on(table.email),
+  statusIdx: index('users_status_idx').on(table.status),
+  createdAtIdx: index('users_created_at_idx').on(table.createdAt),
+}));
 
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
@@ -90,11 +90,11 @@ export const sessions = pgTable('sessions', {
   userAgent: text('user_agent'),
   
   createdAt: timestamp('created_at').notNull().defaultNow(),
-}, (table) => [
-  index('sessions_user_id_idx').on(table.userId),
-  index('sessions_expires_at_idx').on(table.expiresAt),
-  index('sessions_revoked_idx').on(table.revoked),
-]);
+}, (table) => ({
+  userIdIdx: index('sessions_user_id_idx').on(table.userId),
+  expiresAtIdx: index('sessions_expires_at_idx').on(table.expiresAt),
+  revokedIdx: index('sessions_revoked_idx').on(table.revoked),
+}));
 
 export type Session = typeof sessions.$inferSelect;
 export type NewSession = typeof sessions.$inferInsert;
@@ -121,10 +121,10 @@ export const devices = pgTable('devices', {
   userAgent: text('user_agent'),
   
   createdAt: timestamp('created_at').notNull().defaultNow(),
-}, (table) => [
-  index('devices_user_id_idx').on(table.userId),
-  index('devices_is_trusted_idx').on(table.isTrusted),
-]);
+}, (table) => ({
+  userIdIdx: index('devices_user_id_idx').on(table.userId),
+  isTrustedIdx: index('devices_is_trusted_idx').on(table.isTrusted),
+}));
 
 export type Device = typeof devices.$inferSelect;
 export type NewDevice = typeof devices.$inferInsert;
@@ -149,11 +149,11 @@ export const folders = pgTable('folders', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
   deletedAt: timestamp('deleted_at'),
-}, (table) => [
-  index('folders_user_id_idx').on(table.userId),
-  index('folders_parent_id_idx').on(table.parentId),
-  index('folders_deleted_at_idx').on(table.deletedAt),
-]);
+}, (table) => ({
+  userIdIdx: index('folders_user_id_idx').on(table.userId),
+  parentIdIdx: index('folders_parent_id_idx').on(table.parentId),
+  deletedAtIdx: index('folders_deleted_at_idx').on(table.deletedAt),
+}));
 
 export type Folder = typeof folders.$inferSelect;
 export type NewFolder = typeof folders.$inferInsert;
@@ -177,10 +177,10 @@ export const documents = pgTable('documents', {
   storageBucket: varchar('storage_bucket', { length: 255 }).notNull().default('zero-documents'),
   
   contentHash: text('content_hash').notNull(), // SHA-256 do conteúdo
-  encryptionKeyId: uuid('encryption_key_id').references(() => encryptionKeys.id),
+  encryptionKeyId: uuid('encryption_key_id'), // References encryptionKeys (definido depois)
   
   version: integer('version').notNull().default(1),
-  currentVersionId: uuid('current_version_id').references(() => documentVersions.id),
+  currentVersionId: uuid('current_version_id'), // References documentVersions (definido depois)
   
   status: varchar('status', { length: 20 }).notNull().default('active'),
   classification: varchar('classification', { length: 50 }), // public, internal, confidential, secret
@@ -190,13 +190,13 @@ export const documents = pgTable('documents', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
   deletedAt: timestamp('deleted_at'), // Soft delete
-}, (table) => [
-  index('documents_user_id_idx').on(table.userId),
-  index('documents_folder_id_idx').on(table.folderId),
-  index('documents_status_idx').on(table.status),
-  index('documents_deleted_at_idx').on(table.deletedAt),
-  index('documents_created_at_idx').on(table.createdAt),
-]);
+}, (table) => ({
+  userIdIdx: index('documents_user_id_idx').on(table.userId),
+  folderIdIdx: index('documents_folder_id_idx').on(table.folderId),
+  statusIdx: index('documents_status_idx').on(table.status),
+  deletedAtIdx: index('documents_deleted_at_idx').on(table.deletedAt),
+  createdAtIdx: index('documents_created_at_idx').on(table.createdAt),
+}));
 
 export type Document = typeof documents.$inferSelect;
 export type NewDocument = typeof documents.$inferInsert;
@@ -219,16 +219,16 @@ export const documentVersions = pgTable('document_versions', {
   storageBucket: varchar('storage_bucket', { length: 255 }).notNull(),
   
   contentHash: text('content_hash').notNull(),
-  encryptionKeyId: uuid('encryption_key_id').references(() => encryptionKeys.id),
+  encryptionKeyId: uuid('encryption_key_id'), // References encryptionKeys (definido depois)
   
   changeDescription: text('change_description'),
   
   createdAt: timestamp('created_at').notNull().defaultNow(),
-}, (table) => [
-  index('document_versions_document_id_idx').on(table.documentId),
-  index('document_versions_user_id_idx').on(table.userId),
-  uniqueIndex('document_versions_doc_version_unique').on(table.documentId, table.version),
-]);
+}, (table) => ({
+  documentIdIdx: index('document_versions_document_id_idx').on(table.documentId),
+  userIdIdx: index('document_versions_user_id_idx').on(table.userId),
+  docVersionUnique: uniqueIndex('document_versions_doc_version_unique').on(table.documentId, table.version),
+}));
 
 export type DocumentVersion = typeof documentVersions.$inferSelect;
 export type NewDocumentVersion = typeof documentVersions.$inferInsert;
@@ -260,12 +260,12 @@ export const auditLogs = pgTable('audit_logs', {
   
   // Nota: NUNCA armazenar dados sensíveis nos logs
   // Senhas, tokens, chaves, dados biométricos - PROIBIDO
-}, (table) => [
-  index('audit_logs_user_id_idx').on(table.userId),
-  index('audit_logs_action_idx').on(table.action),
-  index('audit_logs_timestamp_idx').on(table.timestamp),
-  index('audit_logs_resource_idx').on(table.resourceType, table.resourceId),
-]);
+}, (table) => ({
+  userIdIdx: index('audit_logs_user_id_idx').on(table.userId),
+  actionIdx: index('audit_logs_action_idx').on(table.action),
+  timestampIdx: index('audit_logs_timestamp_idx').on(table.timestamp),
+  resourceIdx: index('audit_logs_resource_idx').on(table.resourceType, table.resourceId),
+}));
 
 export type AuditLog = typeof auditLogs.$inferSelect;
 export type NewAuditLog = typeof auditLogs.$inferInsert;
@@ -286,10 +286,10 @@ export const recoveryCodes = pgTable('recovery_codes', {
   
   createdAt: timestamp('created_at').notNull().defaultNow(),
   expiresAt: timestamp('expires_at'), // Opcional
-}, (table) => [
-  index('recovery_codes_user_id_idx').on(table.userId),
-  index('recovery_codes_used_idx').on(table.used),
-]);
+}, (table) => ({
+  userIdIdx: index('recovery_codes_user_id_idx').on(table.userId),
+  usedIdx: index('recovery_codes_used_idx').on(table.used),
+}));
 
 export type RecoveryCode = typeof recoveryCodes.$inferSelect;
 export type NewRecoveryCode = typeof recoveryCodes.$inferInsert;
@@ -313,10 +313,10 @@ export const webauthnCredentials = pgTable('webauthn_credentials', {
   
   createdAt: timestamp('created_at').notNull().defaultNow(),
   lastUsedAt: timestamp('last_used_at'),
-}, (table) => [
-  index('webauthn_credentials_user_id_idx').on(table.userId),
-  uniqueIndex('webauthn_credentials_credential_id_unique').on(table.credentialId),
-]);
+}, (table) => ({
+  userIdIdx: index('webauthn_credentials_user_id_idx').on(table.userId),
+  credentialIdUnique: uniqueIndex('webauthn_credentials_credential_id_unique').on(table.credentialId),
+}));
 
 export type WebAuthnCredential = typeof webauthnCredentials.$inferSelect;
 export type NewWebAuthnCredential = typeof webauthnCredentials.$inferInsert;
@@ -341,15 +341,15 @@ export const encryptionKeys = pgTable('encryption_keys', {
   keyPurpose: varchar('key_purpose', { length: 100 }),
   keyVersion: integer('key_version').notNull().default(1),
   
-  rotatedFromId: uuid('rotated_from_id').references(() => encryptionKeys.id),
+  rotatedFromId: uuid('rotated_from_id'), // References encryptionKeys (self-reference, adicionar FK depois via migration)
   
   createdAt: timestamp('created_at').notNull().defaultNow(),
   expiresAt: timestamp('expires_at'),
   revokedAt: timestamp('revoked_at'),
-}, (table) => [
-  index('encryption_keys_user_id_idx').on(table.userId),
-  index('encryption_keys_key_type_idx').on(table.keyType),
-]);
+}, (table) => ({
+  userIdIdx: index('encryption_keys_user_id_idx').on(table.userId),
+  keyTypeIdx: index('encryption_keys_key_type_idx').on(table.keyType),
+}));
 
 export type EncryptionKey = typeof encryptionKeys.$inferSelect;
 export type NewEncryptionKey = typeof encryptionKeys.$inferInsert;

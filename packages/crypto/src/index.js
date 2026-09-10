@@ -276,7 +276,57 @@ export async function decrypt(ciphertext, iv, tag, key) {
     return decoder.decode(decrypted);
 }
 // JWT exports
-export { generateAccessToken, generateRefreshToken, verifyJWT, decodeJWT } from './jwt';
+export { generateAccessToken, generateRefreshToken, verifyJWT, decodeJWT } from './jwt.js';
+// ============================================================================
+// FILE ENCRYPTION (AES-256-GCM for Buffer data)
+// ============================================================================
+/**
+ * Gera bytes aleatórios seguros para chaves de encryption
+ */
+export function randomBytes(length) {
+    const crypto = require('crypto');
+    return crypto.randomBytes(length);
+}
+/**
+ * Encripta um Buffer (arquivo) usando AES-256-GCM
+ * Retorna objeto com dados encriptados e metadados necessários para decrypt
+ */
+export async function encryptFile(data, key) {
+    const crypto = require('crypto');
+    const iv = crypto.randomBytes(12); // 96-bit IV for GCM
+    const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
+    const encrypted = Buffer.concat([
+        cipher.update(data),
+        cipher.final()
+    ]);
+    const authTag = cipher.getAuthTag();
+    return {
+        encryptedData: encrypted,
+        iv: iv,
+        authTag: authTag,
+    };
+}
+/**
+ * Decripta um Buffer (arquivo) usando AES-256-GCM
+ */
+export async function decryptFile(encryptedData, iv, authTag, key) {
+    const crypto = require('crypto');
+    const decipher = crypto.createDecipheriv('aes-256-gcm', key, iv);
+    decipher.setAuthTag(authTag);
+    const decrypted = Buffer.concat([
+        decipher.update(encryptedData),
+        decipher.final()
+    ]);
+    return decrypted;
+}
+// Wrapper simplificado para encryptFile quando key é Buffer
+export async function encryptFileWithKey(data, key) {
+    return encryptFile(data, key);
+}
+// Wrapper simplificado para decryptFile quando todos os params são Buffer
+export async function decryptFileWithKey(encryptedData, iv, authTag, key) {
+    return decryptFile(encryptedData, iv, authTag, key);
+}
 // ============================================================================
 // EXPORTS
 // ============================================================================
@@ -291,6 +341,11 @@ export default {
     deriveKey,
     encrypt,
     decrypt,
+    randomBytes,
+    encryptFile,
+    decryptFile,
+    encryptFileWithKey,
+    decryptFileWithKey,
     ARGON2_CONFIG,
     sha256,
     generateTOTPSecret,

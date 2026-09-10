@@ -141,6 +141,34 @@ export declare const SECURITY_CONSTANTS: {
     readonly TOTP_PERIOD: 30;
     readonly TOTP_WINDOW: 1;
 };
+export declare const PASSWORD_PATTERNS: {
+    readonly MIN_LENGTH: 12;
+    readonly MAX_LENGTH: 128;
+    readonly REQUIRE_UPPERCASE: true;
+    readonly REQUIRE_LOWERCASE: true;
+    readonly REQUIRE_NUMBER: true;
+    readonly REQUIRE_SPECIAL: true;
+};
+export declare class BaseError extends Error {
+    readonly code: string;
+    readonly details?: Record<string, unknown>;
+    constructor(code: string, message: string, details?: Record<string, unknown>);
+}
+export declare class ValidationError extends BaseError {
+    constructor(message: string, details?: Record<string, unknown>);
+}
+export declare class SecurityError extends BaseError {
+    constructor(message: string, details?: Record<string, unknown>);
+}
+export declare class AuthError extends BaseError {
+    constructor(message: string, details?: Record<string, unknown>);
+}
+export declare class NotFoundError extends BaseError {
+    constructor(message: string, details?: Record<string, unknown>);
+}
+export declare class PermissionError extends BaseError {
+    constructor(message: string, details?: Record<string, unknown>);
+}
 /**
  * Gera um UUID v4 seguro
  */

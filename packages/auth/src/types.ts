@@ -31,12 +31,12 @@ export interface MFAVerificationInput {
 
 export interface WebAuthnRegistrationInput {
   userId: string;
-  credential: PublicKeyCredential;
+  credential: import('crypto').webcrypto.CryptoKey | Record<string, unknown>;
   deviceName: string;
 }
 
 export interface WebAuthnLoginInput {
-  credential: PublicKeyCredential;
+  credential: import('crypto').webcrypto.CryptoKey | Record<string, unknown>;
   deviceName?: string;
 }
 
@@ -177,6 +177,7 @@ export interface JWTPayload {
   iss: string;
   aud: string;
   mfa: boolean;
+  [key: string]: unknown; // Index signature para compatibilidade com jose
 }
 
 export interface RefreshTokenPayload {
@@ -188,6 +189,7 @@ export interface RefreshTokenPayload {
   iss: string;
   aud: string;
   counter: number; // Para rotação de refresh tokens
+  [key: string]: unknown; // Index signature para compatibilidade com jose
 }
 
 // ============================================================================
@@ -225,6 +227,7 @@ export type AuthAuditAction =
   | 'MFA_VERIFICATION_SUCCESS'
   | 'MFA_VERIFICATION_FAILURE'
   | 'MFA_DISABLED'
+  | 'MFA_ENABLED'
   | 'WEBAUTHN_REGISTERED'
   | 'WEBAUTHN_AUTHENTICATED'
   | 'DEVICE_TRUSTED'
@@ -232,6 +235,7 @@ export type AuthAuditAction =
   | 'SESSION_REVOKED'
   | 'PASSWORD_CHANGED'
   | 'RECOVERY_CODE_USED'
+  | 'RECOVERY_CODES_REGENERATED'
   | 'ACCOUNT_LOCKED'
   | 'ACCOUNT_UNLOCKED';
 

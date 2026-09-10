@@ -33,7 +33,8 @@ export type {
 } from './schema';
 
 // Database connection helper (será implementado na API)
-export function createDatabaseClient(connectionString: string) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function createDatabaseClient(_connectionString: string) {
   // Implementação será feita no pacote da API
   throw new Error('Database client deve ser inicializado pela API');
 }

@@ -10,14 +10,14 @@
 import { SignJWT, jwtVerify } from 'jose';
 import type { JWTPayload as JoseJWTPayload } from 'jose';
 
-interface JWTPayload extends JoseJWTPayload {
+export interface JWTPayload extends JoseJWTPayload {
   userId: string;
   sessionId: string;
   deviceId?: string;
   email?: string;
 }
 
-interface RefreshTokenPayload {
+export interface RefreshTokenPayload {
   userId: string;
   sessionId: string;
   deviceId: string;

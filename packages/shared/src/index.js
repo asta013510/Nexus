@@ -6,7 +6,7 @@
  * Nenhuma lógica sensível de segurança deve residir aqui.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SECURITY_CONSTANTS = void 0;
+exports.PermissionError = exports.NotFoundError = exports.AuthError = exports.SecurityError = exports.ValidationError = exports.BaseError = exports.PASSWORD_PATTERNS = exports.SECURITY_CONSTANTS = void 0;
 exports.generateUUID = generateUUID;
 exports.isValidUUID = isValidUUID;
 exports.sanitizeFilename = sanitizeFilename;
@@ -51,6 +51,69 @@ exports.SECURITY_CONSTANTS = {
     TOTP_PERIOD: 30,
     TOTP_WINDOW: 1, // Allow 1 step before/after for clock skew
 };
+exports.PASSWORD_PATTERNS = {
+    MIN_LENGTH: exports.SECURITY_CONSTANTS.MIN_PASSWORD_LENGTH,
+    MAX_LENGTH: exports.SECURITY_CONSTANTS.MAX_PASSWORD_LENGTH,
+    REQUIRE_UPPERCASE: true,
+    REQUIRE_LOWERCASE: true,
+    REQUIRE_NUMBER: true,
+    REQUIRE_SPECIAL: true,
+};
+// ============================================================================
+// CLASSES DE ERRO
+// ============================================================================
+class BaseError extends Error {
+    code;
+    details;
+    constructor(code, message, details) {
+        super(message);
+        this.name = 'BaseError';
+        this.code = code;
+        if (details !== undefined) {
+            this.details = details;
+        }
+        // Maintain proper stack trace in V8
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, this.constructor);
+        }
+    }
+}
+exports.BaseError = BaseError;
+class ValidationError extends BaseError {
+    constructor(message, details) {
+        super('VALIDATION_ERROR', message, details);
+        this.name = 'ValidationError';
+    }
+}
+exports.ValidationError = ValidationError;
+class SecurityError extends BaseError {
+    constructor(message, details) {
+        super('SECURITY_ERROR', message, details);
+        this.name = 'SecurityError';
+    }
+}
+exports.SecurityError = SecurityError;
+class AuthError extends BaseError {
+    constructor(message, details) {
+        super('AUTH_ERROR', message, details);
+        this.name = 'AuthError';
+    }
+}
+exports.AuthError = AuthError;
+class NotFoundError extends BaseError {
+    constructor(message, details) {
+        super('NOT_FOUND', message, details);
+        this.name = 'NotFoundError';
+    }
+}
+exports.NotFoundError = NotFoundError;
+class PermissionError extends BaseError {
+    constructor(message, details) {
+        super('PERMISSION_DENIED', message, details);
+        this.name = 'PermissionError';
+    }
+}
+exports.PermissionError = PermissionError;
 // ============================================================================
 // UTILITÁRIOS
 // ============================================================================

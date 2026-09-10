@@ -17,7 +17,7 @@
  */
 
 import { eq, and } from 'drizzle-orm';
-import { sha256, verifyJWT, decodeJWT } from '@zero/crypto';
+import { sha256, verifyJWT } from '@zero/crypto';
 import { schema } from '@zero/database';
 import { generateUUID } from '@zero/shared';
 import { AUTH_CONSTANTS } from '../constants';
@@ -301,7 +301,7 @@ export const SessionService = {
           .where(
             and(
               eq(schema.sessions.userId, userId),
-              eq(schema.sessions.id, exceptSessionId ? sql`!= ${exceptSessionId}` : sql`IS NOT NULL`)
+              sql`${schema.sessions.id} != ${exceptSessionId}`
             )
           );
       } else {
@@ -365,7 +365,7 @@ export const SessionService = {
 
       return { 
         success: true, 
-        sessions: sessions.map(s => ({
+        sessions: sessions.map((s: any) => ({
           sessionId: s.sessionId,
           createdAt: s.createdAt,
           expiresAt: s.expiresAt,

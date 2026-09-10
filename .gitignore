@@ -1,14 +1,16 @@
 ```
-# TypeScript/JavaScript build artifacts
-*.js
-*.ts
-*.d.ts
-*.js.map
-*.ts.map
-*.d.ts.map
-
 # Dependencies
 node_modules/
+
+# Build outputs
+dist/
+build/
+target/
+
+# TypeScript/JavaScript compiled files
+*.js.map
+*.d.ts
+*.d.ts.map
 
 # Environment variables
 .env
@@ -18,48 +20,37 @@ node_modules/
 # Logs
 *.log
 
-# Coverage reports
-coverage/
-htmlcov/
-*.coverage
-
-# IDE files
+# IDE specific
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# OS generated files
-.DS_Store
-Thumbs.db
+# Coverage reports
+coverage/
+htmlcov/
+.coverage
 
-# Build outputs
-dist/
-build/
-target/
+# Test artifacts
+.jest/
+jest-coverage/
 
-# Python cache (if any Python exists in project)
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# Temporary files
-*.tmp
-*.temp
-
-# Package manager files
+# Package manager
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
-# Testing
-.nyc_output/
-coverage/
+# OS generated files
+.DS_Store
+Thumbs.db
 
-# Distribution archives
-*.tar.gz
-*.zip
-*.tgz
-*.tar
+# Python related (if applicable)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
 ```

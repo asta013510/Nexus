@@ -142,10 +142,12 @@ exports.MFAService = {
             // Salvar recovery codes hasheados
             for (const code of recoveryCodes) {
                 const hashedCode = await (0, crypto_1.sha256)(code);
+                const codePrefix = code.substring(0, 4); // Primeiros 4 caracteres para identificação
                 const newRecoveryCode = {
                     id: (0, shared_1.generateUUID)(),
                     userId,
                     codeHash: hashedCode,
+                    codePrefix,
                     usedAt: null,
                     createdAt: new Date(),
                 };
@@ -308,10 +310,12 @@ exports.MFAService = {
             // Salvar novos codes hasheados
             for (const code of recoveryCodes) {
                 const hashedCode = await (0, crypto_1.sha256)(code);
+                const codePrefix = code.substring(0, 4); // Primeiros 4 caracteres para identificação
                 const newRecoveryCode = {
                     id: (0, shared_1.generateUUID)(),
                     userId,
                     codeHash: hashedCode,
+                    codePrefix,
                     usedAt: null,
                     createdAt: new Date(),
                 };

@@ -86,7 +86,31 @@ export declare function encrypt(data: string, key: CryptoKey): Promise<{
  * Decripta dados usando AES-256-GCM
  */
 export declare function decrypt(ciphertext: string, iv: string, tag: string, key: CryptoKey): Promise<string>;
-export { generateAccessToken, generateRefreshToken, verifyJWT, decodeJWT } from './jwt';
+export { generateAccessToken, generateRefreshToken, verifyJWT, decodeJWT } from './jwt.js';
+export type { JWTPayload, RefreshTokenPayload } from './jwt.js';
+/**
+ * Gera bytes aleatórios seguros para chaves de encryption
+ */
+export declare function randomBytes(length: number): Buffer;
+/**
+ * Encripta um Buffer (arquivo) usando AES-256-GCM
+ * Retorna objeto com dados encriptados e metadados necessários para decrypt
+ */
+export declare function encryptFile(data: Buffer, key: Buffer): Promise<{
+    encryptedData: Buffer;
+    iv: Buffer;
+    authTag: Buffer;
+}>;
+/**
+ * Decripta um Buffer (arquivo) usando AES-256-GCM
+ */
+export declare function decryptFile(encryptedData: Buffer, iv: Buffer, authTag: Buffer, key: Buffer): Promise<Buffer>;
+export declare function encryptFileWithKey(data: Buffer, key: Buffer): Promise<{
+    encryptedData: Buffer;
+    iv: Buffer;
+    authTag: Buffer;
+}>;
+export declare function decryptFileWithKey(encryptedData: Buffer, iv: Buffer, authTag: Buffer, key: Buffer): Promise<Buffer>;
 declare const _default: {
     hashPassword: typeof hashPassword;
     verifyPassword: typeof verifyPassword;
@@ -98,6 +122,11 @@ declare const _default: {
     deriveKey: typeof deriveKey;
     encrypt: typeof encrypt;
     decrypt: typeof decrypt;
+    randomBytes: typeof randomBytes;
+    encryptFile: typeof encryptFile;
+    decryptFile: typeof decryptFile;
+    encryptFileWithKey: typeof encryptFileWithKey;
+    decryptFileWithKey: typeof decryptFileWithKey;
     ARGON2_CONFIG: {
         readonly memoryCost: 65536;
         readonly timeCost: 3;

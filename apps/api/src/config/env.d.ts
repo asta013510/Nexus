@@ -34,6 +34,7 @@ declare const envSchema: z.ZodObject<{
     WEBAUTHN_RP_ID: z.ZodString;
     WEBAUTHN_ORIGIN: z.ZodString;
 }, "strip", z.ZodTypeAny, {
+    JWT_SECRET: string;
     NODE_ENV: "development" | "production" | "test";
     PORT: number;
     DATABASE_URL: string;
@@ -43,7 +44,6 @@ declare const envSchema: z.ZodObject<{
     MINIO_SECRET_KEY: string;
     MINIO_BUCKET: string;
     MINIO_USE_SSL: boolean;
-    JWT_SECRET: string;
     JWT_EXPIRES_IN: string;
     REFRESH_TOKEN_EXPIRES_IN: string;
     REFRESH_TOKEN_ROTATION_ENABLED: boolean;
@@ -62,12 +62,12 @@ declare const envSchema: z.ZodObject<{
     WEBAUTHN_RP_ID: string;
     WEBAUTHN_ORIGIN: string;
 }, {
+    JWT_SECRET: string;
     DATABASE_URL: string;
     REDIS_URL: string;
     MINIO_ENDPOINT: string;
     MINIO_ACCESS_KEY: string;
     MINIO_SECRET_KEY: string;
-    JWT_SECRET: string;
     ENCRYPTION_MASTER_KEY: string;
     CORS_ORIGIN: string;
     WEBAUTHN_RP_ID: string;

@@ -7,5 +7,5 @@
 export { schema } from './schema';
 export * from './schema';
 export type { User, NewUser, Session, NewSession, Device, NewDevice, Folder, NewFolder, Document, NewDocument, DocumentVersion, NewDocumentVersion, AuditLog, NewAuditLog, RecoveryCode, NewRecoveryCode, WebAuthnCredential, NewWebAuthnCredential, EncryptionKey, NewEncryptionKey, } from './schema';
-export declare function createDatabaseClient(connectionString: string): void;
+export declare function createDatabaseClient(_connectionString: string): void;
 //# sourceMappingURL=index.d.ts.map

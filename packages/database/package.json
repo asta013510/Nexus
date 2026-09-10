@@ -14,12 +14,17 @@
   },
   "dependencies": {
     "@zero/shared": "*",
-    "drizzle-orm": "^0.29.1",
+    "drizzle-orm": "0.29.5",
     "postgres": "^3.4.9"
   },
   "devDependencies": {
+    "@shelf/jest-mongodb": "^4.3.2",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20.10.0",
     "drizzle-kit": "^0.20.18",
+    "jest": "^30.5.1",
+    "testcontainers": "^12.1.0",
+    "ts-jest": "^29.4.12",
     "vitest": "^1.0.4"
   }
 }

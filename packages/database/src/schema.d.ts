@@ -697,10 +697,394 @@ export declare const folders: import("drizzle-orm/pg-core").PgTableWithColumns<{
 }>;
 export type Folder = typeof folders.$inferSelect;
 export type NewFolder = typeof folders.$inferInsert;
-export declare const documents: any;
+export declare const documents: import("drizzle-orm/pg-core").PgTableWithColumns<{
+    name: "documents";
+    schema: undefined;
+    columns: {
+        id: import("drizzle-orm/pg-core").PgColumn<{
+            name: "id";
+            tableName: "documents";
+            dataType: "string";
+            columnType: "PgUUID";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        userId: import("drizzle-orm/pg-core").PgColumn<{
+            name: "user_id";
+            tableName: "documents";
+            dataType: "string";
+            columnType: "PgUUID";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        folderId: import("drizzle-orm/pg-core").PgColumn<{
+            name: "folder_id";
+            tableName: "documents";
+            dataType: "string";
+            columnType: "PgUUID";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        name: import("drizzle-orm/pg-core").PgColumn<{
+            name: "name";
+            tableName: "documents";
+            dataType: "string";
+            columnType: "PgVarchar";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, {}, {}>;
+        description: import("drizzle-orm/pg-core").PgColumn<{
+            name: "description";
+            tableName: "documents";
+            dataType: "string";
+            columnType: "PgText";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, {}, {}>;
+        mimeType: import("drizzle-orm/pg-core").PgColumn<{
+            name: "mime_type";
+            tableName: "documents";
+            dataType: "string";
+            columnType: "PgVarchar";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, {}, {}>;
+        size: import("drizzle-orm/pg-core").PgColumn<{
+            name: "size";
+            tableName: "documents";
+            dataType: "number";
+            columnType: "PgInteger";
+            data: number;
+            driverParam: string | number;
+            notNull: true;
+            hasDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        storageKey: import("drizzle-orm/pg-core").PgColumn<{
+            name: "storage_key";
+            tableName: "documents";
+            dataType: "string";
+            columnType: "PgText";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, {}, {}>;
+        storageBucket: import("drizzle-orm/pg-core").PgColumn<{
+            name: "storage_bucket";
+            tableName: "documents";
+            dataType: "string";
+            columnType: "PgVarchar";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: true;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, {}, {}>;
+        contentHash: import("drizzle-orm/pg-core").PgColumn<{
+            name: "content_hash";
+            tableName: "documents";
+            dataType: "string";
+            columnType: "PgText";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, {}, {}>;
+        encryptionKeyId: import("drizzle-orm/pg-core").PgColumn<{
+            name: "encryption_key_id";
+            tableName: "documents";
+            dataType: "string";
+            columnType: "PgUUID";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        version: import("drizzle-orm/pg-core").PgColumn<{
+            name: "version";
+            tableName: "documents";
+            dataType: "number";
+            columnType: "PgInteger";
+            data: number;
+            driverParam: string | number;
+            notNull: true;
+            hasDefault: true;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        currentVersionId: import("drizzle-orm/pg-core").PgColumn<{
+            name: "current_version_id";
+            tableName: "documents";
+            dataType: "string";
+            columnType: "PgUUID";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        status: import("drizzle-orm/pg-core").PgColumn<{
+            name: "status";
+            tableName: "documents";
+            dataType: "string";
+            columnType: "PgVarchar";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: true;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, {}, {}>;
+        classification: import("drizzle-orm/pg-core").PgColumn<{
+            name: "classification";
+            tableName: "documents";
+            dataType: "string";
+            columnType: "PgVarchar";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, {}, {}>;
+        tags: import("drizzle-orm/pg-core").PgColumn<{
+            name: "tags";
+            tableName: "documents";
+            dataType: "json";
+            columnType: "PgJsonb";
+            data: string[];
+            driverParam: unknown;
+            notNull: false;
+            hasDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        createdAt: import("drizzle-orm/pg-core").PgColumn<{
+            name: "created_at";
+            tableName: "documents";
+            dataType: "date";
+            columnType: "PgTimestamp";
+            data: Date;
+            driverParam: string;
+            notNull: true;
+            hasDefault: true;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        updatedAt: import("drizzle-orm/pg-core").PgColumn<{
+            name: "updated_at";
+            tableName: "documents";
+            dataType: "date";
+            columnType: "PgTimestamp";
+            data: Date;
+            driverParam: string;
+            notNull: true;
+            hasDefault: true;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        deletedAt: import("drizzle-orm/pg-core").PgColumn<{
+            name: "deleted_at";
+            tableName: "documents";
+            dataType: "date";
+            columnType: "PgTimestamp";
+            data: Date;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+    };
+    dialect: "pg";
+}>;
 export type Document = typeof documents.$inferSelect;
 export type NewDocument = typeof documents.$inferInsert;
-export declare const documentVersions: any;
+export declare const documentVersions: import("drizzle-orm/pg-core").PgTableWithColumns<{
+    name: "document_versions";
+    schema: undefined;
+    columns: {
+        id: import("drizzle-orm/pg-core").PgColumn<{
+            name: "id";
+            tableName: "document_versions";
+            dataType: "string";
+            columnType: "PgUUID";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        documentId: import("drizzle-orm/pg-core").PgColumn<{
+            name: "document_id";
+            tableName: "document_versions";
+            dataType: "string";
+            columnType: "PgUUID";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        userId: import("drizzle-orm/pg-core").PgColumn<{
+            name: "user_id";
+            tableName: "document_versions";
+            dataType: "string";
+            columnType: "PgUUID";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        version: import("drizzle-orm/pg-core").PgColumn<{
+            name: "version";
+            tableName: "document_versions";
+            dataType: "number";
+            columnType: "PgInteger";
+            data: number;
+            driverParam: string | number;
+            notNull: true;
+            hasDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        mimeType: import("drizzle-orm/pg-core").PgColumn<{
+            name: "mime_type";
+            tableName: "document_versions";
+            dataType: "string";
+            columnType: "PgVarchar";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, {}, {}>;
+        size: import("drizzle-orm/pg-core").PgColumn<{
+            name: "size";
+            tableName: "document_versions";
+            dataType: "number";
+            columnType: "PgInteger";
+            data: number;
+            driverParam: string | number;
+            notNull: true;
+            hasDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        storageKey: import("drizzle-orm/pg-core").PgColumn<{
+            name: "storage_key";
+            tableName: "document_versions";
+            dataType: "string";
+            columnType: "PgText";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, {}, {}>;
+        storageBucket: import("drizzle-orm/pg-core").PgColumn<{
+            name: "storage_bucket";
+            tableName: "document_versions";
+            dataType: "string";
+            columnType: "PgVarchar";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, {}, {}>;
+        contentHash: import("drizzle-orm/pg-core").PgColumn<{
+            name: "content_hash";
+            tableName: "document_versions";
+            dataType: "string";
+            columnType: "PgText";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, {}, {}>;
+        encryptionKeyId: import("drizzle-orm/pg-core").PgColumn<{
+            name: "encryption_key_id";
+            tableName: "document_versions";
+            dataType: "string";
+            columnType: "PgUUID";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        changeDescription: import("drizzle-orm/pg-core").PgColumn<{
+            name: "change_description";
+            tableName: "document_versions";
+            dataType: "string";
+            columnType: "PgText";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, {}, {}>;
+        createdAt: import("drizzle-orm/pg-core").PgColumn<{
+            name: "created_at";
+            tableName: "document_versions";
+            dataType: "date";
+            columnType: "PgTimestamp";
+            data: Date;
+            driverParam: string;
+            notNull: true;
+            hasDefault: true;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+    };
+    dialect: "pg";
+}>;
 export type DocumentVersion = typeof documentVersions.$inferSelect;
 export type NewDocumentVersion = typeof documentVersions.$inferInsert;
 export declare const auditLogs: import("drizzle-orm/pg-core").PgTableWithColumns<{
@@ -1102,19 +1486,169 @@ export declare const webauthnCredentials: import("drizzle-orm/pg-core").PgTableW
 }>;
 export type WebAuthnCredential = typeof webauthnCredentials.$inferSelect;
 export type NewWebAuthnCredential = typeof webauthnCredentials.$inferInsert;
-export declare const encryptionKeys: any;
+export declare const encryptionKeys: import("drizzle-orm/pg-core").PgTableWithColumns<{
+    name: "encryption_keys";
+    schema: undefined;
+    columns: {
+        id: import("drizzle-orm/pg-core").PgColumn<{
+            name: "id";
+            tableName: "encryption_keys";
+            dataType: "string";
+            columnType: "PgUUID";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        userId: import("drizzle-orm/pg-core").PgColumn<{
+            name: "user_id";
+            tableName: "encryption_keys";
+            dataType: "string";
+            columnType: "PgUUID";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        keyType: import("drizzle-orm/pg-core").PgColumn<{
+            name: "key_type";
+            tableName: "encryption_keys";
+            dataType: "string";
+            columnType: "PgVarchar";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, {}, {}>;
+        wrappedKey: import("drizzle-orm/pg-core").PgColumn<{
+            name: "wrapped_key";
+            tableName: "encryption_keys";
+            dataType: "string";
+            columnType: "PgText";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, {}, {}>;
+        keyIv: import("drizzle-orm/pg-core").PgColumn<{
+            name: "key_iv";
+            tableName: "encryption_keys";
+            dataType: "string";
+            columnType: "PgText";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, {}, {}>;
+        keyTag: import("drizzle-orm/pg-core").PgColumn<{
+            name: "key_tag";
+            tableName: "encryption_keys";
+            dataType: "string";
+            columnType: "PgText";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, {}, {}>;
+        keyPurpose: import("drizzle-orm/pg-core").PgColumn<{
+            name: "key_purpose";
+            tableName: "encryption_keys";
+            dataType: "string";
+            columnType: "PgVarchar";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, {}, {}>;
+        keyVersion: import("drizzle-orm/pg-core").PgColumn<{
+            name: "key_version";
+            tableName: "encryption_keys";
+            dataType: "number";
+            columnType: "PgInteger";
+            data: number;
+            driverParam: string | number;
+            notNull: true;
+            hasDefault: true;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        rotatedFromId: import("drizzle-orm/pg-core").PgColumn<{
+            name: "rotated_from_id";
+            tableName: "encryption_keys";
+            dataType: "string";
+            columnType: "PgUUID";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        createdAt: import("drizzle-orm/pg-core").PgColumn<{
+            name: "created_at";
+            tableName: "encryption_keys";
+            dataType: "date";
+            columnType: "PgTimestamp";
+            data: Date;
+            driverParam: string;
+            notNull: true;
+            hasDefault: true;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        expiresAt: import("drizzle-orm/pg-core").PgColumn<{
+            name: "expires_at";
+            tableName: "encryption_keys";
+            dataType: "date";
+            columnType: "PgTimestamp";
+            data: Date;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        revokedAt: import("drizzle-orm/pg-core").PgColumn<{
+            name: "revoked_at";
+            tableName: "encryption_keys";
+            dataType: "date";
+            columnType: "PgTimestamp";
+            data: Date;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+    };
+    dialect: "pg";
+}>;
 export type EncryptionKey = typeof encryptionKeys.$inferSelect;
 export type NewEncryptionKey = typeof encryptionKeys.$inferInsert;
 export declare const userRelations: import("drizzle-orm").Relations<"users", {
     sessions: import("drizzle-orm").Many<"sessions">;
     devices: import("drizzle-orm").Many<"devices">;
     folders: import("drizzle-orm").Many<"folders">;
-    documents: import("drizzle-orm").Many<any>;
+    documents: import("drizzle-orm").Many<"documents">;
     auditLogs: import("drizzle-orm").Many<"audit_logs">;
     recoveryCodes: import("drizzle-orm").Many<"recovery_codes">;
     webauthnCredentials: import("drizzle-orm").Many<"webauthn_credentials">;
-    encryptionKeys: import("drizzle-orm").Many<any>;
-    documentVersions: import("drizzle-orm").Many<any>;
+    encryptionKeys: import("drizzle-orm").Many<"encryption_keys">;
+    documentVersions: import("drizzle-orm").Many<"document_versions">;
 }>;
 export declare const sessionRelations: import("drizzle-orm").Relations<"sessions", {
     user: import("drizzle-orm").One<"users", true>;
@@ -1126,18 +1660,18 @@ export declare const folderRelations: import("drizzle-orm").Relations<"folders",
     user: import("drizzle-orm").One<"users", true>;
     parent: import("drizzle-orm").One<"folders", false>;
     children: import("drizzle-orm").Many<"folders">;
-    documents: import("drizzle-orm").Many<any>;
+    documents: import("drizzle-orm").Many<"documents">;
 }>;
-export declare const documentRelations: import("drizzle-orm").Relations<string, {
-    user: import("drizzle-orm").One<"users", false>;
+export declare const documentRelations: import("drizzle-orm").Relations<"documents", {
+    user: import("drizzle-orm").One<"users", true>;
     folder: import("drizzle-orm").One<"folders", false>;
-    versions: import("drizzle-orm").Many<any>;
-    encryptionKey: import("drizzle-orm").One<any, false>;
+    versions: import("drizzle-orm").Many<"document_versions">;
+    encryptionKey: import("drizzle-orm").One<"encryption_keys", false>;
 }>;
-export declare const documentVersionRelations: import("drizzle-orm").Relations<string, {
-    document: import("drizzle-orm").One<any, false>;
-    user: import("drizzle-orm").One<"users", false>;
-    encryptionKey: import("drizzle-orm").One<any, false>;
+export declare const documentVersionRelations: import("drizzle-orm").Relations<"document_versions", {
+    document: import("drizzle-orm").One<"documents", true>;
+    user: import("drizzle-orm").One<"users", true>;
+    encryptionKey: import("drizzle-orm").One<"encryption_keys", false>;
 }>;
 export declare const auditLogRelations: import("drizzle-orm").Relations<"audit_logs", {
     user: import("drizzle-orm").One<"users", false>;
@@ -1150,10 +1684,10 @@ export declare const recoveryCodeRelations: import("drizzle-orm").Relations<"rec
 export declare const webauthnCredentialRelations: import("drizzle-orm").Relations<"webauthn_credentials", {
     user: import("drizzle-orm").One<"users", true>;
 }>;
-export declare const encryptionKeyRelations: import("drizzle-orm").Relations<string, {
-    user: import("drizzle-orm").One<"users", false>;
-    documents: import("drizzle-orm").Many<any>;
-    documentVersions: import("drizzle-orm").Many<any>;
+export declare const encryptionKeyRelations: import("drizzle-orm").Relations<"encryption_keys", {
+    user: import("drizzle-orm").One<"users", true>;
+    documents: import("drizzle-orm").Many<"documents">;
+    documentVersions: import("drizzle-orm").Many<"document_versions">;
 }>;
 export declare const schema: {
     users: import("drizzle-orm/pg-core").PgTableWithColumns<{
@@ -1832,8 +2366,392 @@ export declare const schema: {
         };
         dialect: "pg";
     }>;
-    documents: any;
-    documentVersions: any;
+    documents: import("drizzle-orm/pg-core").PgTableWithColumns<{
+        name: "documents";
+        schema: undefined;
+        columns: {
+            id: import("drizzle-orm/pg-core").PgColumn<{
+                name: "id";
+                tableName: "documents";
+                dataType: "string";
+                columnType: "PgUUID";
+                data: string;
+                driverParam: string;
+                notNull: true;
+                hasDefault: false;
+                enumValues: undefined;
+                baseColumn: never;
+            }, {}, {}>;
+            userId: import("drizzle-orm/pg-core").PgColumn<{
+                name: "user_id";
+                tableName: "documents";
+                dataType: "string";
+                columnType: "PgUUID";
+                data: string;
+                driverParam: string;
+                notNull: true;
+                hasDefault: false;
+                enumValues: undefined;
+                baseColumn: never;
+            }, {}, {}>;
+            folderId: import("drizzle-orm/pg-core").PgColumn<{
+                name: "folder_id";
+                tableName: "documents";
+                dataType: "string";
+                columnType: "PgUUID";
+                data: string;
+                driverParam: string;
+                notNull: false;
+                hasDefault: false;
+                enumValues: undefined;
+                baseColumn: never;
+            }, {}, {}>;
+            name: import("drizzle-orm/pg-core").PgColumn<{
+                name: "name";
+                tableName: "documents";
+                dataType: "string";
+                columnType: "PgVarchar";
+                data: string;
+                driverParam: string;
+                notNull: true;
+                hasDefault: false;
+                enumValues: [string, ...string[]];
+                baseColumn: never;
+            }, {}, {}>;
+            description: import("drizzle-orm/pg-core").PgColumn<{
+                name: "description";
+                tableName: "documents";
+                dataType: "string";
+                columnType: "PgText";
+                data: string;
+                driverParam: string;
+                notNull: false;
+                hasDefault: false;
+                enumValues: [string, ...string[]];
+                baseColumn: never;
+            }, {}, {}>;
+            mimeType: import("drizzle-orm/pg-core").PgColumn<{
+                name: "mime_type";
+                tableName: "documents";
+                dataType: "string";
+                columnType: "PgVarchar";
+                data: string;
+                driverParam: string;
+                notNull: true;
+                hasDefault: false;
+                enumValues: [string, ...string[]];
+                baseColumn: never;
+            }, {}, {}>;
+            size: import("drizzle-orm/pg-core").PgColumn<{
+                name: "size";
+                tableName: "documents";
+                dataType: "number";
+                columnType: "PgInteger";
+                data: number;
+                driverParam: string | number;
+                notNull: true;
+                hasDefault: false;
+                enumValues: undefined;
+                baseColumn: never;
+            }, {}, {}>;
+            storageKey: import("drizzle-orm/pg-core").PgColumn<{
+                name: "storage_key";
+                tableName: "documents";
+                dataType: "string";
+                columnType: "PgText";
+                data: string;
+                driverParam: string;
+                notNull: true;
+                hasDefault: false;
+                enumValues: [string, ...string[]];
+                baseColumn: never;
+            }, {}, {}>;
+            storageBucket: import("drizzle-orm/pg-core").PgColumn<{
+                name: "storage_bucket";
+                tableName: "documents";
+                dataType: "string";
+                columnType: "PgVarchar";
+                data: string;
+                driverParam: string;
+                notNull: true;
+                hasDefault: true;
+                enumValues: [string, ...string[]];
+                baseColumn: never;
+            }, {}, {}>;
+            contentHash: import("drizzle-orm/pg-core").PgColumn<{
+                name: "content_hash";
+                tableName: "documents";
+                dataType: "string";
+                columnType: "PgText";
+                data: string;
+                driverParam: string;
+                notNull: true;
+                hasDefault: false;
+                enumValues: [string, ...string[]];
+                baseColumn: never;
+            }, {}, {}>;
+            encryptionKeyId: import("drizzle-orm/pg-core").PgColumn<{
+                name: "encryption_key_id";
+                tableName: "documents";
+                dataType: "string";
+                columnType: "PgUUID";
+                data: string;
+                driverParam: string;
+                notNull: false;
+                hasDefault: false;
+                enumValues: undefined;
+                baseColumn: never;
+            }, {}, {}>;
+            version: import("drizzle-orm/pg-core").PgColumn<{
+                name: "version";
+                tableName: "documents";
+                dataType: "number";
+                columnType: "PgInteger";
+                data: number;
+                driverParam: string | number;
+                notNull: true;
+                hasDefault: true;
+                enumValues: undefined;
+                baseColumn: never;
+            }, {}, {}>;
+            currentVersionId: import("drizzle-orm/pg-core").PgColumn<{
+                name: "current_version_id";
+                tableName: "documents";
+                dataType: "string";
+                columnType: "PgUUID";
+                data: string;
+                driverParam: string;
+                notNull: false;
+                hasDefault: false;
+                enumValues: undefined;
+                baseColumn: never;
+            }, {}, {}>;
+            status: import("drizzle-orm/pg-core").PgColumn<{
+                name: "status";
+                tableName: "documents";
+                dataType: "string";
+                columnType: "PgVarchar";
+                data: string;
+                driverParam: string;
+                notNull: true;
+                hasDefault: true;
+                enumValues: [string, ...string[]];
+                baseColumn: never;
+            }, {}, {}>;
+            classification: import("drizzle-orm/pg-core").PgColumn<{
+                name: "classification";
+                tableName: "documents";
+                dataType: "string";
+                columnType: "PgVarchar";
+                data: string;
+                driverParam: string;
+                notNull: false;
+                hasDefault: false;
+                enumValues: [string, ...string[]];
+                baseColumn: never;
+            }, {}, {}>;
+            tags: import("drizzle-orm/pg-core").PgColumn<{
+                name: "tags";
+                tableName: "documents";
+                dataType: "json";
+                columnType: "PgJsonb";
+                data: string[];
+                driverParam: unknown;
+                notNull: false;
+                hasDefault: false;
+                enumValues: undefined;
+                baseColumn: never;
+            }, {}, {}>;
+            createdAt: import("drizzle-orm/pg-core").PgColumn<{
+                name: "created_at";
+                tableName: "documents";
+                dataType: "date";
+                columnType: "PgTimestamp";
+                data: Date;
+                driverParam: string;
+                notNull: true;
+                hasDefault: true;
+                enumValues: undefined;
+                baseColumn: never;
+            }, {}, {}>;
+            updatedAt: import("drizzle-orm/pg-core").PgColumn<{
+                name: "updated_at";
+                tableName: "documents";
+                dataType: "date";
+                columnType: "PgTimestamp";
+                data: Date;
+                driverParam: string;
+                notNull: true;
+                hasDefault: true;
+                enumValues: undefined;
+                baseColumn: never;
+            }, {}, {}>;
+            deletedAt: import("drizzle-orm/pg-core").PgColumn<{
+                name: "deleted_at";
+                tableName: "documents";
+                dataType: "date";
+                columnType: "PgTimestamp";
+                data: Date;
+                driverParam: string;
+                notNull: false;
+                hasDefault: false;
+                enumValues: undefined;
+                baseColumn: never;
+            }, {}, {}>;
+        };
+        dialect: "pg";
+    }>;
+    documentVersions: import("drizzle-orm/pg-core").PgTableWithColumns<{
+        name: "document_versions";
+        schema: undefined;
+        columns: {
+            id: import("drizzle-orm/pg-core").PgColumn<{
+                name: "id";
+                tableName: "document_versions";
+                dataType: "string";
+                columnType: "PgUUID";
+                data: string;
+                driverParam: string;
+                notNull: true;
+                hasDefault: false;
+                enumValues: undefined;
+                baseColumn: never;
+            }, {}, {}>;
+            documentId: import("drizzle-orm/pg-core").PgColumn<{
+                name: "document_id";
+                tableName: "document_versions";
+                dataType: "string";
+                columnType: "PgUUID";
+                data: string;
+                driverParam: string;
+                notNull: true;
+                hasDefault: false;
+                enumValues: undefined;
+                baseColumn: never;
+            }, {}, {}>;
+            userId: import("drizzle-orm/pg-core").PgColumn<{
+                name: "user_id";
+                tableName: "document_versions";
+                dataType: "string";
+                columnType: "PgUUID";
+                data: string;
+                driverParam: string;
+                notNull: true;
+                hasDefault: false;
+                enumValues: undefined;
+                baseColumn: never;
+            }, {}, {}>;
+            version: import("drizzle-orm/pg-core").PgColumn<{
+                name: "version";
+                tableName: "document_versions";
+                dataType: "number";
+                columnType: "PgInteger";
+                data: number;
+                driverParam: string | number;
+                notNull: true;
+                hasDefault: false;
+                enumValues: undefined;
+                baseColumn: never;
+            }, {}, {}>;
+            mimeType: import("drizzle-orm/pg-core").PgColumn<{
+                name: "mime_type";
+                tableName: "document_versions";
+                dataType: "string";
+                columnType: "PgVarchar";
+                data: string;
+                driverParam: string;
+                notNull: true;
+                hasDefault: false;
+                enumValues: [string, ...string[]];
+                baseColumn: never;
+            }, {}, {}>;
+            size: import("drizzle-orm/pg-core").PgColumn<{
+                name: "size";
+                tableName: "document_versions";
+                dataType: "number";
+                columnType: "PgInteger";
+                data: number;
+                driverParam: string | number;
+                notNull: true;
+                hasDefault: false;
+                enumValues: undefined;
+                baseColumn: never;
+            }, {}, {}>;
+            storageKey: import("drizzle-orm/pg-core").PgColumn<{
+                name: "storage_key";
+                tableName: "document_versions";
+                dataType: "string";
+                columnType: "PgText";
+                data: string;
+                driverParam: string;
+                notNull: true;
+                hasDefault: false;
+                enumValues: [string, ...string[]];
+                baseColumn: never;
+            }, {}, {}>;
+            storageBucket: import("drizzle-orm/pg-core").PgColumn<{
+                name: "storage_bucket";
+                tableName: "document_versions";
+                dataType: "string";
+                columnType: "PgVarchar";
+                data: string;
+                driverParam: string;
+                notNull: true;
+                hasDefault: false;
+                enumValues: [string, ...string[]];
+                baseColumn: never;
+            }, {}, {}>;
+            contentHash: import("drizzle-orm/pg-core").PgColumn<{
+                name: "content_hash";
+                tableName: "document_versions";
+                dataType: "string";
+                columnType: "PgText";
+                data: string;
+                driverParam: string;
+                notNull: true;
+                hasDefault: false;
+                enumValues: [string, ...string[]];
+                baseColumn: never;
+            }, {}, {}>;
+            encryptionKeyId: import("drizzle-orm/pg-core").PgColumn<{
+                name: "encryption_key_id";
+                tableName: "document_versions";
+                dataType: "string";
+                columnType: "PgUUID";
+                data: string;
+                driverParam: string;
+                notNull: false;
+                hasDefault: false;
+                enumValues: undefined;
+                baseColumn: never;
+            }, {}, {}>;
+            changeDescription: import("drizzle-orm/pg-core").PgColumn<{
+                name: "change_description";
+                tableName: "document_versions";
+                dataType: "string";
+                columnType: "PgText";
+                data: string;
+                driverParam: string;
+                notNull: false;
+                hasDefault: false;
+                enumValues: [string, ...string[]];
+                baseColumn: never;
+            }, {}, {}>;
+            createdAt: import("drizzle-orm/pg-core").PgColumn<{
+                name: "created_at";
+                tableName: "document_versions";
+                dataType: "date";
+                columnType: "PgTimestamp";
+                data: Date;
+                driverParam: string;
+                notNull: true;
+                hasDefault: true;
+                enumValues: undefined;
+                baseColumn: never;
+            }, {}, {}>;
+        };
+        dialect: "pg";
+    }>;
     auditLogs: import("drizzle-orm/pg-core").PgTableWithColumns<{
         name: "audit_logs";
         schema: undefined;
@@ -2227,6 +3145,156 @@ export declare const schema: {
         };
         dialect: "pg";
     }>;
-    encryptionKeys: any;
+    encryptionKeys: import("drizzle-orm/pg-core").PgTableWithColumns<{
+        name: "encryption_keys";
+        schema: undefined;
+        columns: {
+            id: import("drizzle-orm/pg-core").PgColumn<{
+                name: "id";
+                tableName: "encryption_keys";
+                dataType: "string";
+                columnType: "PgUUID";
+                data: string;
+                driverParam: string;
+                notNull: true;
+                hasDefault: false;
+                enumValues: undefined;
+                baseColumn: never;
+            }, {}, {}>;
+            userId: import("drizzle-orm/pg-core").PgColumn<{
+                name: "user_id";
+                tableName: "encryption_keys";
+                dataType: "string";
+                columnType: "PgUUID";
+                data: string;
+                driverParam: string;
+                notNull: true;
+                hasDefault: false;
+                enumValues: undefined;
+                baseColumn: never;
+            }, {}, {}>;
+            keyType: import("drizzle-orm/pg-core").PgColumn<{
+                name: "key_type";
+                tableName: "encryption_keys";
+                dataType: "string";
+                columnType: "PgVarchar";
+                data: string;
+                driverParam: string;
+                notNull: true;
+                hasDefault: false;
+                enumValues: [string, ...string[]];
+                baseColumn: never;
+            }, {}, {}>;
+            wrappedKey: import("drizzle-orm/pg-core").PgColumn<{
+                name: "wrapped_key";
+                tableName: "encryption_keys";
+                dataType: "string";
+                columnType: "PgText";
+                data: string;
+                driverParam: string;
+                notNull: true;
+                hasDefault: false;
+                enumValues: [string, ...string[]];
+                baseColumn: never;
+            }, {}, {}>;
+            keyIv: import("drizzle-orm/pg-core").PgColumn<{
+                name: "key_iv";
+                tableName: "encryption_keys";
+                dataType: "string";
+                columnType: "PgText";
+                data: string;
+                driverParam: string;
+                notNull: true;
+                hasDefault: false;
+                enumValues: [string, ...string[]];
+                baseColumn: never;
+            }, {}, {}>;
+            keyTag: import("drizzle-orm/pg-core").PgColumn<{
+                name: "key_tag";
+                tableName: "encryption_keys";
+                dataType: "string";
+                columnType: "PgText";
+                data: string;
+                driverParam: string;
+                notNull: true;
+                hasDefault: false;
+                enumValues: [string, ...string[]];
+                baseColumn: never;
+            }, {}, {}>;
+            keyPurpose: import("drizzle-orm/pg-core").PgColumn<{
+                name: "key_purpose";
+                tableName: "encryption_keys";
+                dataType: "string";
+                columnType: "PgVarchar";
+                data: string;
+                driverParam: string;
+                notNull: false;
+                hasDefault: false;
+                enumValues: [string, ...string[]];
+                baseColumn: never;
+            }, {}, {}>;
+            keyVersion: import("drizzle-orm/pg-core").PgColumn<{
+                name: "key_version";
+                tableName: "encryption_keys";
+                dataType: "number";
+                columnType: "PgInteger";
+                data: number;
+                driverParam: string | number;
+                notNull: true;
+                hasDefault: true;
+                enumValues: undefined;
+                baseColumn: never;
+            }, {}, {}>;
+            rotatedFromId: import("drizzle-orm/pg-core").PgColumn<{
+                name: "rotated_from_id";
+                tableName: "encryption_keys";
+                dataType: "string";
+                columnType: "PgUUID";
+                data: string;
+                driverParam: string;
+                notNull: false;
+                hasDefault: false;
+                enumValues: undefined;
+                baseColumn: never;
+            }, {}, {}>;
+            createdAt: import("drizzle-orm/pg-core").PgColumn<{
+                name: "created_at";
+                tableName: "encryption_keys";
+                dataType: "date";
+                columnType: "PgTimestamp";
+                data: Date;
+                driverParam: string;
+                notNull: true;
+                hasDefault: true;
+                enumValues: undefined;
+                baseColumn: never;
+            }, {}, {}>;
+            expiresAt: import("drizzle-orm/pg-core").PgColumn<{
+                name: "expires_at";
+                tableName: "encryption_keys";
+                dataType: "date";
+                columnType: "PgTimestamp";
+                data: Date;
+                driverParam: string;
+                notNull: false;
+                hasDefault: false;
+                enumValues: undefined;
+                baseColumn: never;
+            }, {}, {}>;
+            revokedAt: import("drizzle-orm/pg-core").PgColumn<{
+                name: "revoked_at";
+                tableName: "encryption_keys";
+                dataType: "date";
+                columnType: "PgTimestamp";
+                data: Date;
+                driverParam: string;
+                notNull: false;
+                hasDefault: false;
+                enumValues: undefined;
+                baseColumn: never;
+            }, {}, {}>;
+        };
+        dialect: "pg";
+    }>;
 };
 //# sourceMappingURL=schema.d.ts.map

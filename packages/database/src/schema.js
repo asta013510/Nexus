@@ -40,11 +40,11 @@ exports.users = (0, pg_core_1.pgTable)('users', {
     createdAt: (0, pg_core_1.timestamp)('created_at').notNull().defaultNow(),
     updatedAt: (0, pg_core_1.timestamp)('updated_at').notNull().defaultNow(),
     deletedAt: (0, pg_core_1.timestamp)('deleted_at'), // Soft delete para conta
-}, (table) => [
-    (0, pg_core_1.uniqueIndex)('users_email_unique').on(table.email),
-    (0, pg_core_1.index)('users_status_idx').on(table.status),
-    (0, pg_core_1.index)('users_created_at_idx').on(table.createdAt),
-]);
+}, (table) => ({
+    emailUnique: (0, pg_core_1.uniqueIndex)('users_email_unique').on(table.email),
+    statusIdx: (0, pg_core_1.index)('users_status_idx').on(table.status),
+    createdAtIdx: (0, pg_core_1.index)('users_created_at_idx').on(table.createdAt),
+}));
 // ============================================================================
 // TABELA: SESSIONS
 // ============================================================================
@@ -62,11 +62,11 @@ exports.sessions = (0, pg_core_1.pgTable)('sessions', {
     ipAddress: (0, pg_core_1.varchar)('ip_address', { length: 45 }), // IPv6 max
     userAgent: (0, pg_core_1.text)('user_agent'),
     createdAt: (0, pg_core_1.timestamp)('created_at').notNull().defaultNow(),
-}, (table) => [
-    (0, pg_core_1.index)('sessions_user_id_idx').on(table.userId),
-    (0, pg_core_1.index)('sessions_expires_at_idx').on(table.expiresAt),
-    (0, pg_core_1.index)('sessions_revoked_idx').on(table.revoked),
-]);
+}, (table) => ({
+    userIdIdx: (0, pg_core_1.index)('sessions_user_id_idx').on(table.userId),
+    expiresAtIdx: (0, pg_core_1.index)('sessions_expires_at_idx').on(table.expiresAt),
+    revokedIdx: (0, pg_core_1.index)('sessions_revoked_idx').on(table.revoked),
+}));
 // ============================================================================
 // TABELA: DEVICES
 // ============================================================================
@@ -83,10 +83,10 @@ exports.devices = (0, pg_core_1.pgTable)('devices', {
     ipAddress: (0, pg_core_1.varchar)('ip_address', { length: 45 }),
     userAgent: (0, pg_core_1.text)('user_agent'),
     createdAt: (0, pg_core_1.timestamp)('created_at').notNull().defaultNow(),
-}, (table) => [
-    (0, pg_core_1.index)('devices_user_id_idx').on(table.userId),
-    (0, pg_core_1.index)('devices_is_trusted_idx').on(table.isTrusted),
-]);
+}, (table) => ({
+    userIdIdx: (0, pg_core_1.index)('devices_user_id_idx').on(table.userId),
+    isTrustedIdx: (0, pg_core_1.index)('devices_is_trusted_idx').on(table.isTrusted),
+}));
 // ============================================================================
 // TABELA: FOLDERS
 // ============================================================================
@@ -102,11 +102,11 @@ exports.folders = (0, pg_core_1.pgTable)('folders', {
     createdAt: (0, pg_core_1.timestamp)('created_at').notNull().defaultNow(),
     updatedAt: (0, pg_core_1.timestamp)('updated_at').notNull().defaultNow(),
     deletedAt: (0, pg_core_1.timestamp)('deleted_at'),
-}, (table) => [
-    (0, pg_core_1.index)('folders_user_id_idx').on(table.userId),
-    (0, pg_core_1.index)('folders_parent_id_idx').on(table.parentId),
-    (0, pg_core_1.index)('folders_deleted_at_idx').on(table.deletedAt),
-]);
+}, (table) => ({
+    userIdIdx: (0, pg_core_1.index)('folders_user_id_idx').on(table.userId),
+    parentIdIdx: (0, pg_core_1.index)('folders_parent_id_idx').on(table.parentId),
+    deletedAtIdx: (0, pg_core_1.index)('folders_deleted_at_idx').on(table.deletedAt),
+}));
 // ============================================================================
 // TABELA: DOCUMENTS
 // ============================================================================
@@ -121,22 +121,22 @@ exports.documents = (0, pg_core_1.pgTable)('documents', {
     storageKey: (0, pg_core_1.text)('storage_key').notNull(), // Chave no object storage
     storageBucket: (0, pg_core_1.varchar)('storage_bucket', { length: 255 }).notNull().default('zero-documents'),
     contentHash: (0, pg_core_1.text)('content_hash').notNull(), // SHA-256 do conteúdo
-    encryptionKeyId: (0, pg_core_1.uuid)('encryption_key_id').references(() => exports.encryptionKeys.id),
+    encryptionKeyId: (0, pg_core_1.uuid)('encryption_key_id'), // References encryptionKeys (definido depois)
     version: (0, pg_core_1.integer)('version').notNull().default(1),
-    currentVersionId: (0, pg_core_1.uuid)('current_version_id').references(() => exports.documentVersions.id),
+    currentVersionId: (0, pg_core_1.uuid)('current_version_id'), // References documentVersions (definido depois)
     status: (0, pg_core_1.varchar)('status', { length: 20 }).notNull().default('active'),
     classification: (0, pg_core_1.varchar)('classification', { length: 50 }), // public, internal, confidential, secret
     tags: (0, pg_core_1.jsonb)('tags').$type(), // Array de tags
     createdAt: (0, pg_core_1.timestamp)('created_at').notNull().defaultNow(),
     updatedAt: (0, pg_core_1.timestamp)('updated_at').notNull().defaultNow(),
     deletedAt: (0, pg_core_1.timestamp)('deleted_at'), // Soft delete
-}, (table) => [
-    (0, pg_core_1.index)('documents_user_id_idx').on(table.userId),
-    (0, pg_core_1.index)('documents_folder_id_idx').on(table.folderId),
-    (0, pg_core_1.index)('documents_status_idx').on(table.status),
-    (0, pg_core_1.index)('documents_deleted_at_idx').on(table.deletedAt),
-    (0, pg_core_1.index)('documents_created_at_idx').on(table.createdAt),
-]);
+}, (table) => ({
+    userIdIdx: (0, pg_core_1.index)('documents_user_id_idx').on(table.userId),
+    folderIdIdx: (0, pg_core_1.index)('documents_folder_id_idx').on(table.folderId),
+    statusIdx: (0, pg_core_1.index)('documents_status_idx').on(table.status),
+    deletedAtIdx: (0, pg_core_1.index)('documents_deleted_at_idx').on(table.deletedAt),
+    createdAtIdx: (0, pg_core_1.index)('documents_created_at_idx').on(table.createdAt),
+}));
 // ============================================================================
 // TABELA: DOCUMENT_VERSIONS
 // ============================================================================
@@ -150,14 +150,14 @@ exports.documentVersions = (0, pg_core_1.pgTable)('document_versions', {
     storageKey: (0, pg_core_1.text)('storage_key').notNull(),
     storageBucket: (0, pg_core_1.varchar)('storage_bucket', { length: 255 }).notNull(),
     contentHash: (0, pg_core_1.text)('content_hash').notNull(),
-    encryptionKeyId: (0, pg_core_1.uuid)('encryption_key_id').references(() => exports.encryptionKeys.id),
+    encryptionKeyId: (0, pg_core_1.uuid)('encryption_key_id'), // References encryptionKeys (definido depois)
     changeDescription: (0, pg_core_1.text)('change_description'),
     createdAt: (0, pg_core_1.timestamp)('created_at').notNull().defaultNow(),
-}, (table) => [
-    (0, pg_core_1.index)('document_versions_document_id_idx').on(table.documentId),
-    (0, pg_core_1.index)('document_versions_user_id_idx').on(table.userId),
-    (0, pg_core_1.uniqueIndex)('document_versions_doc_version_unique').on(table.documentId, table.version),
-]);
+}, (table) => ({
+    documentIdIdx: (0, pg_core_1.index)('document_versions_document_id_idx').on(table.documentId),
+    userIdIdx: (0, pg_core_1.index)('document_versions_user_id_idx').on(table.userId),
+    docVersionUnique: (0, pg_core_1.uniqueIndex)('document_versions_doc_version_unique').on(table.documentId, table.version),
+}));
 // ============================================================================
 // TABELA: AUDIT_LOGS
 // ============================================================================
@@ -177,12 +177,12 @@ exports.auditLogs = (0, pg_core_1.pgTable)('audit_logs', {
     metadata: (0, pg_core_1.jsonb)('metadata'), // Dados adicionais estruturados
     // Nota: NUNCA armazenar dados sensíveis nos logs
     // Senhas, tokens, chaves, dados biométricos - PROIBIDO
-}, (table) => [
-    (0, pg_core_1.index)('audit_logs_user_id_idx').on(table.userId),
-    (0, pg_core_1.index)('audit_logs_action_idx').on(table.action),
-    (0, pg_core_1.index)('audit_logs_timestamp_idx').on(table.timestamp),
-    (0, pg_core_1.index)('audit_logs_resource_idx').on(table.resourceType, table.resourceId),
-]);
+}, (table) => ({
+    userIdIdx: (0, pg_core_1.index)('audit_logs_user_id_idx').on(table.userId),
+    actionIdx: (0, pg_core_1.index)('audit_logs_action_idx').on(table.action),
+    timestampIdx: (0, pg_core_1.index)('audit_logs_timestamp_idx').on(table.timestamp),
+    resourceIdx: (0, pg_core_1.index)('audit_logs_resource_idx').on(table.resourceType, table.resourceId),
+}));
 // ============================================================================
 // TABELA: RECOVERY_CODES
 // ============================================================================
@@ -195,10 +195,10 @@ exports.recoveryCodes = (0, pg_core_1.pgTable)('recovery_codes', {
     usedAt: (0, pg_core_1.timestamp)('used_at'),
     createdAt: (0, pg_core_1.timestamp)('created_at').notNull().defaultNow(),
     expiresAt: (0, pg_core_1.timestamp)('expires_at'), // Opcional
-}, (table) => [
-    (0, pg_core_1.index)('recovery_codes_user_id_idx').on(table.userId),
-    (0, pg_core_1.index)('recovery_codes_used_idx').on(table.used),
-]);
+}, (table) => ({
+    userIdIdx: (0, pg_core_1.index)('recovery_codes_user_id_idx').on(table.userId),
+    usedIdx: (0, pg_core_1.index)('recovery_codes_used_idx').on(table.used),
+}));
 // ============================================================================
 // TABELA: WEBAUTHN_CREDENTIALS
 // ============================================================================
@@ -213,10 +213,10 @@ exports.webauthnCredentials = (0, pg_core_1.pgTable)('webauthn_credentials', {
     deviceType: (0, pg_core_1.varchar)('device_type', { length: 50 }),
     createdAt: (0, pg_core_1.timestamp)('created_at').notNull().defaultNow(),
     lastUsedAt: (0, pg_core_1.timestamp)('last_used_at'),
-}, (table) => [
-    (0, pg_core_1.index)('webauthn_credentials_user_id_idx').on(table.userId),
-    (0, pg_core_1.uniqueIndex)('webauthn_credentials_credential_id_unique').on(table.credentialId),
-]);
+}, (table) => ({
+    userIdIdx: (0, pg_core_1.index)('webauthn_credentials_user_id_idx').on(table.userId),
+    credentialIdUnique: (0, pg_core_1.uniqueIndex)('webauthn_credentials_credential_id_unique').on(table.credentialId),
+}));
 // ============================================================================
 // TABELA: ENCRYPTION_KEYS
 // ============================================================================
@@ -232,14 +232,14 @@ exports.encryptionKeys = (0, pg_core_1.pgTable)('encryption_keys', {
     keyTag: (0, pg_core_1.text)('key_tag').notNull(),
     keyPurpose: (0, pg_core_1.varchar)('key_purpose', { length: 100 }),
     keyVersion: (0, pg_core_1.integer)('key_version').notNull().default(1),
-    rotatedFromId: (0, pg_core_1.uuid)('rotated_from_id').references(() => exports.encryptionKeys.id),
+    rotatedFromId: (0, pg_core_1.uuid)('rotated_from_id'), // References encryptionKeys (self-reference, adicionar FK depois via migration)
     createdAt: (0, pg_core_1.timestamp)('created_at').notNull().defaultNow(),
     expiresAt: (0, pg_core_1.timestamp)('expires_at'),
     revokedAt: (0, pg_core_1.timestamp)('revoked_at'),
-}, (table) => [
-    (0, pg_core_1.index)('encryption_keys_user_id_idx').on(table.userId),
-    (0, pg_core_1.index)('encryption_keys_key_type_idx').on(table.keyType),
-]);
+}, (table) => ({
+    userIdIdx: (0, pg_core_1.index)('encryption_keys_user_id_idx').on(table.userId),
+    keyTypeIdx: (0, pg_core_1.index)('encryption_keys_key_type_idx').on(table.keyType),
+}));
 // ============================================================================
 // RELATIONS
 // ============================================================================

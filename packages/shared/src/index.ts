@@ -248,6 +248,73 @@ export const SECURITY_CONSTANTS = {
   TOTP_WINDOW: 1, // Allow 1 step before/after for clock skew
 } as const;
 
+export const PASSWORD_PATTERNS = {
+  MIN_LENGTH: SECURITY_CONSTANTS.MIN_PASSWORD_LENGTH,
+  MAX_LENGTH: SECURITY_CONSTANTS.MAX_PASSWORD_LENGTH,
+  REQUIRE_UPPERCASE: true,
+  REQUIRE_LOWERCASE: true,
+  REQUIRE_NUMBER: true,
+  REQUIRE_SPECIAL: true,
+} as const;
+
+// ============================================================================
+// CLASSES DE ERRO
+// ============================================================================
+
+export class BaseError extends Error {
+  public readonly code: string;
+  public readonly details?: Record<string, unknown>;
+
+  constructor(code: string, message: string, details?: Record<string, unknown>) {
+    super(message);
+    this.name = 'BaseError';
+    this.code = code;
+    if (details !== undefined) {
+      this.details = details;
+    }
+    
+    // Maintain proper stack trace in V8
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, this.constructor);
+    }
+  }
+}
+
+export class ValidationError extends BaseError {
+  constructor(message: string, details?: Record<string, unknown>) {
+    super('VALIDATION_ERROR', message, details);
+    this.name = 'ValidationError';
+  }
+}
+
+export class SecurityError extends BaseError {
+  constructor(message: string, details?: Record<string, unknown>) {
+    super('SECURITY_ERROR', message, details);
+    this.name = 'SecurityError';
+  }
+}
+
+export class AuthError extends BaseError {
+  constructor(message: string, details?: Record<string, unknown>) {
+    super('AUTH_ERROR', message, details);
+    this.name = 'AuthError';
+  }
+}
+
+export class NotFoundError extends BaseError {
+  constructor(message: string, details?: Record<string, unknown>) {
+    super('NOT_FOUND', message, details);
+    this.name = 'NotFoundError';
+  }
+}
+
+export class PermissionError extends BaseError {
+  constructor(message: string, details?: Record<string, unknown>) {
+    super('PERMISSION_DENIED', message, details);
+    this.name = 'PermissionError';
+  }
+}
+
 // ============================================================================
 // UTILITÁRIOS
 // ============================================================================

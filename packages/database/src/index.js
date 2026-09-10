@@ -26,7 +26,8 @@ var schema_1 = require("./schema");
 Object.defineProperty(exports, "schema", { enumerable: true, get: function () { return schema_1.schema; } });
 __exportStar(require("./schema"), exports);
 // Database connection helper (será implementado na API)
-function createDatabaseClient(connectionString) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function createDatabaseClient(_connectionString) {
     // Implementação será feita no pacote da API
     throw new Error('Database client deve ser inicializado pela API');
 }

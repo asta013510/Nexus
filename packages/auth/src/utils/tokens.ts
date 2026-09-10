@@ -9,7 +9,7 @@ import { AUTH_CONSTANTS } from '../constants';
 import type { JWTPayload, RefreshTokenPayload, TokenOptions, AuthError } from '../types';
 
 // Chave secreta para JWT (em produção, usar variável de ambiente)
-let JWT_SECRET_KEY: CryptoKey | null = null;
+let JWT_SECRET_KEY: import('crypto').webcrypto.CryptoKey | null = null;
 
 /**
  * Inicializa a chave JWT a partir de um segredo
