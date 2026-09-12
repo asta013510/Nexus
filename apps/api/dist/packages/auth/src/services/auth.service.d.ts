@@ -9,7 +9,8 @@
  * - Auditoria de eventos
  */
 import { type User as DBUser } from '@zero/database';
-import type { RegisterInput, LoginInput, AuthResponse, AuthAuditEvent } from '../types';
+import type { RegisterInput, LoginInput, AuthResponse, AuthError, AuthAuditEvent } from '../types';
+import { generateAuthTokens } from '../utils/tokens';
 export declare function setDatabaseClient(client: any): void;
 /**
  * Registra novo usuário no sistema
@@ -65,5 +66,45 @@ export declare const AuthService: {
     auditLog(event: Omit<AuthAuditEvent, "success"> & {
         success: boolean;
     }): Promise<void>;
+    /**
+     * Verifica código MFA durante login
+     */
+    verifyMFA(userId: string, mfaCode: string, ipAddress: string, userAgent: string): Promise<AuthResponse>;
+    /**
+     * Refresh de access token usando refresh token
+     */
+    refreshAccessToken(refreshToken: string, ipAddress: string, userAgent: string): Promise<{
+        success: boolean;
+        tokens?: typeof generateAuthTokens;
+        error?: AuthError;
+    }>;
+    /**
+     * Logout de uma sessão específica
+     */
+    logout(sessionId: string, ipAddress: string, userAgent: string): Promise<{
+        success: boolean;
+        error?: AuthError;
+    }>;
+    /**
+     * Logout de todas as sessões do usuário
+     */
+    logoutAll(userId: string, currentSessionId: string | null, ipAddress: string, userAgent: string): Promise<{
+        success: boolean;
+        error?: AuthError;
+    }>;
+    /**
+     * Obtém usuário por ID (sem dados sensíveis)
+     */
+    getUserById(userId: string): Promise<{
+        success: boolean;
+        user?: {
+            id: string;
+            email: string;
+            displayName: string | null;
+            mfaEnabled: boolean;
+            status: string;
+        };
+        error?: AuthError;
+    }>;
 };
 //# sourceMappingURL=auth.service.d.ts.map

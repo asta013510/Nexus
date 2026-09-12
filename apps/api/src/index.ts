@@ -170,10 +170,29 @@ async function bootstrap() {
     console.error('❌ Erro ao carregar rotas de autenticação:', error);
   });
 
-  // TODO: Mount routes de documentos (futuro)
-  // import('./routes/documents.js').then(({ documentRoutes }) => {
-  //   app.use('/api/documents', documentRoutes);
-  // });
+  // Mount routes de documentos
+  import('./routes/documents.js').then(({ documentsRouter }) => {
+    app.use('/api/documents', documentsRouter);
+    console.log('✅ Rotas de documentos carregadas');
+  }).catch((error) => {
+    console.error('❌ Erro ao carregar rotas de documentos:', error);
+  });
+
+  // Mount routes de biometria facial
+  import('./routes/biometric-facial.js').then(({ biometricRouter }) => {
+    app.use('/api/biometric', biometricRouter);
+    console.log('✅ Rotas de biometria carregadas');
+  }).catch((error) => {
+    console.error('❌ Erro ao carregar rotas de biometria:', error);
+  });
+
+  // Mount routes de recuperação
+  import('./routes/recovery.js').then(({ recoveryRouter }) => {
+    app.use('/api/recovery', recoveryRouter);
+    console.log('✅ Rotas de recuperação carregadas');
+  }).catch((error) => {
+    console.error('❌ Erro ao carregar rotas de recuperação:', error);
+  });
 
   // 404 handler
   app.use((req, res) => {

@@ -16,6 +16,6 @@
     "jest": "^30.5.1",
     "testcontainers": "^12.1.0",
     "ts-jest": "^29.4.12",
-    "vitest": "^1.0.4"
+    "vitest": "^4.1.11"
   }
 }

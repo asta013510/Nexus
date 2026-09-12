@@ -1,40 +1,53 @@
 ```
+# Dependencies
+node_modules/
+
 # Build artifacts
 dist/
 build/
 target/
 
-# Compiled files
-*.d.ts
-*.js.map
-*.d.ts.map
-
-# Dependencies
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# TypeScript build info
+**/tsconfig.tsbuildinfo
 
 # Environment variables
 .env
 .env.local
 .env.*
-!.env.example
 
-# IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
+# Compiled JavaScript/TypeScript
+**/*.js.map
+**/*.d.ts
+**/*.d.ts.map
 
 # Logs
 *.log
 
 # Temporary files
 *.tmp
-*.temp
+*.swp
 
-# Coverage
+# IDE files
+.vscode/
+.idea/
+
+# Python cache (if any Python files exist in the project)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Coverage reports
 coverage/
-.nyc_output/
+htmlcov/
+*.coverage
+
+# Distribution / packaging
+*.tar.gz
+*.zip
+*.gz
+
+# OS generated files
+.DS_Store
+Thumbs.db
 ```

@@ -556,6 +556,313 @@ exports.AuthService = {
             console.error('[AuthService] Falha ao registrar log de auditoria:', error);
         }
     },
+    /**
+     * Verifica código MFA durante login
+     */
+    async verifyMFA(userId, mfaCode, ipAddress, userAgent) {
+        const db = getDB();
+        await this.auditLog({
+            action: 'MFA_VERIFY_REQUEST',
+            timestamp: new Date(),
+            ipAddress,
+            userAgent,
+            success: true,
+            metadata: { userId },
+        });
+        const user = await db
+            .select()
+            .from(database_1.schema.users)
+            .where((0, drizzle_orm_1.eq)(database_1.schema.users.id, userId))
+            .limit(1);
+        if (!user || user.length === 0) {
+            await this.auditLog({
+                action: 'MFA_VERIFY_FAILURE',
+                timestamp: new Date(),
+                ipAddress,
+                userAgent,
+                success: false,
+                failureReason: 'Usuário não encontrado',
+            });
+            return {
+                success: false,
+                error: new types_1.AuthError('INVALID_CREDENTIALS', 'Credenciais inválidas')
+            };
+        }
+        const userData = user[0];
+        if (!userData.mfaEnabled || !userData.mfaSecret) {
+            await this.auditLog({
+                action: 'MFA_VERIFY_FAILURE',
+                timestamp: new Date(),
+                ipAddress,
+                userAgent,
+                success: false,
+                failureReason: 'MFA não habilitado',
+            });
+            return {
+                success: false,
+                error: new types_1.AuthError('MFA_NOT_ENABLED', 'MFA não habilitado para esta conta')
+            };
+        }
+        const { verifyTOTP } = await import('@zero/crypto');
+        const isValid = verifyTOTP(userData.mfaSecret, mfaCode);
+        if (!isValid) {
+            await this.auditLog({
+                action: 'MFA_VERIFY_FAILURE',
+                timestamp: new Date(),
+                ipAddress,
+                userAgent,
+                success: false,
+                failureReason: 'Código MFA inválido',
+            });
+            return {
+                success: false,
+                error: new types_1.AuthError('INVALID_MFA_CODE', 'Código MFA inválido')
+            };
+        }
+        // MFA verificado com sucesso - gerar tokens
+        const sessionId = (0, shared_1.generateUUID)();
+        const deviceId = (0, shared_1.generateUUID)();
+        const tokens = (0, tokens_1.generateAuthTokens)(userId, sessionId, deviceId);
+        // Atualizar status do usuário para active
+        await db
+            .update(database_1.schema.users)
+            .set({
+            status: 'active',
+            lastLoginAt: new Date()
+        })
+            .where((0, drizzle_orm_1.eq)(database_1.schema.users.id, userId));
+        await this.auditLog({
+            action: 'MFA_VERIFY_SUCCESS',
+            timestamp: new Date(),
+            ipAddress,
+            userAgent,
+            success: true,
+            userId,
+            sessionId,
+            deviceId,
+        });
+        return {
+            success: true,
+            user: {
+                id: userData.id,
+                email: userData.email,
+                displayName: userData.displayName,
+            },
+            tokens,
+            mfaRequired: false,
+        };
+    },
+    /**
+     * Refresh de access token usando refresh token
+     */
+    async refreshAccessToken(refreshToken, ipAddress, userAgent) {
+        const db = getDB();
+        await this.auditLog({
+            action: 'TOKEN_REFRESH_REQUEST',
+            timestamp: new Date(),
+            ipAddress,
+            userAgent,
+            success: true,
+        });
+        const { verifyJWT } = await import('@zero/crypto');
+        const verified = verifyJWT(refreshToken, 'refresh');
+        if (!verified.valid) {
+            await this.auditLog({
+                action: 'TOKEN_REFRESH_FAILURE',
+                timestamp: new Date(),
+                ipAddress,
+                userAgent,
+                success: false,
+                failureReason: 'Refresh token inválido',
+            });
+            return {
+                success: false,
+                error: verified.error
+            };
+        }
+        const payload = verified.payload;
+        const userId = payload.sub;
+        const sessionId = payload.sid;
+        // Verificar se sessão ainda existe e é válida
+        const sessions = await db
+            .select()
+            .from(database_1.schema.sessions)
+            .where((0, drizzle_orm_1.eq)(database_1.schema.sessions.id, sessionId))
+            .limit(1);
+        if (!sessions || sessions.length === 0) {
+            await this.auditLog({
+                action: 'TOKEN_REFRESH_FAILURE',
+                timestamp: new Date(),
+                ipAddress,
+                userAgent,
+                success: false,
+                failureReason: 'Sessão não encontrada',
+            });
+            return {
+                success: false,
+                error: new types_1.AuthError('SESSION_INVALID', 'Sessão inválida ou expirada')
+            };
+        }
+        const session = sessions[0];
+        if (session.revokedAt || session.expiresAt < new Date()) {
+            await this.auditLog({
+                action: 'TOKEN_REFRESH_FAILURE',
+                timestamp: new Date(),
+                ipAddress,
+                userAgent,
+                success: false,
+                failureReason: 'Sessão revogada ou expirada',
+            });
+            return {
+                success: false,
+                error: new types_1.AuthError('SESSION_REVOKED', 'Sessão foi revogada')
+            };
+        }
+        // Gerar novo par de tokens
+        const tokens = (0, tokens_1.generateAuthTokens)(userId, sessionId, session.deviceId);
+        // Rotacionar refresh token (invalidar o anterior)
+        await db
+            .update(database_1.schema.refreshTokens)
+            .set({ revokedAt: new Date() })
+            .where((0, drizzle_orm_1.eq)(database_1.schema.refreshTokens.tokenHash, (0, crypto_1.sha256)(refreshToken)));
+        await this.auditLog({
+            action: 'TOKEN_REFRESH_SUCCESS',
+            timestamp: new Date(),
+            ipAddress,
+            userAgent,
+            success: true,
+            userId,
+            sessionId,
+        });
+        return {
+            success: true,
+            tokens,
+        };
+    },
+    /**
+     * Logout de uma sessão específica
+     */
+    async logout(sessionId, ipAddress, userAgent) {
+        const db = getDB();
+        await this.auditLog({
+            action: 'LOGOUT_REQUEST',
+            timestamp: new Date(),
+            ipAddress,
+            userAgent,
+            success: true,
+            sessionId,
+        });
+        const sessions = await db
+            .select()
+            .from(database_1.schema.sessions)
+            .where((0, drizzle_orm_1.eq)(database_1.schema.sessions.id, sessionId))
+            .limit(1);
+        if (!sessions || sessions.length === 0) {
+            return { success: true }; // Já não existe, considerado sucesso
+        }
+        const session = sessions[0];
+        // Revogar sessão
+        await db
+            .update(database_1.schema.sessions)
+            .set({ revokedAt: new Date() })
+            .where((0, drizzle_orm_1.eq)(database_1.schema.sessions.id, sessionId));
+        // Revogar refresh tokens associados
+        await db
+            .update(database_1.schema.refreshTokens)
+            .set({ revokedAt: new Date() })
+            .where((0, drizzle_orm_1.eq)(database_1.schema.refreshTokens.sessionId, sessionId));
+        await this.auditLog({
+            action: 'LOGOUT_SUCCESS',
+            timestamp: new Date(),
+            ipAddress,
+            userAgent,
+            success: true,
+            sessionId,
+            userId: session.userId,
+        });
+        return { success: true };
+    },
+    /**
+     * Logout de todas as sessões do usuário
+     */
+    async logoutAll(userId, currentSessionId, ipAddress, userAgent) {
+        const db = getDB();
+        await this.auditLog({
+            action: 'LOGOUT_ALL_REQUEST',
+            timestamp: new Date(),
+            ipAddress,
+            userAgent,
+            success: true,
+            userId,
+        });
+        // Revogar todas as sessões exceto a atual (se fornecida)
+        const updateQuery = db
+            .update(database_1.schema.sessions)
+            .set({ revokedAt: new Date() })
+            .where((0, drizzle_orm_1.eq)(database_1.schema.sessions.userId, userId));
+        if (currentSessionId) {
+            updateQuery.where((0, drizzle_orm_2.sql) `id != ${currentSessionId}`);
+        }
+        else {
+            updateQuery.execute();
+        }
+        // Revogar todos os refresh tokens exceto os da sessão atual
+        const refreshTokenQuery = db
+            .update(database_1.schema.refreshTokens)
+            .set({ revokedAt: new Date() })
+            .where((0, drizzle_orm_1.eq)(database_1.schema.refreshTokens.userId, userId));
+        if (currentSessionId) {
+            refreshTokenQuery.where((0, drizzle_orm_2.sql) `sessionId != ${currentSessionId}`);
+        }
+        else {
+            refreshTokenQuery.execute();
+        }
+        await this.auditLog({
+            action: 'LOGOUT_ALL_SUCCESS',
+            timestamp: new Date(),
+            ipAddress,
+            userAgent,
+            success: true,
+            userId,
+        });
+        return { success: true };
+    },
+    /**
+     * Obtém usuário por ID (sem dados sensíveis)
+     */
+    async getUserById(userId) {
+        const db = getDB();
+        try {
+            const users = await db
+                .select({
+                id: database_1.schema.users.id,
+                email: database_1.schema.users.email,
+                displayName: database_1.schema.users.displayName,
+                mfaEnabled: database_1.schema.users.mfaEnabled,
+                status: database_1.schema.users.status,
+            })
+                .from(database_1.schema.users)
+                .where((0, drizzle_orm_1.eq)(database_1.schema.users.id, userId))
+                .limit(1);
+            if (!users || users.length === 0) {
+                return {
+                    success: false,
+                    error: new types_1.AuthError('USER_NOT_FOUND', 'Usuário não encontrado')
+                };
+            }
+            return {
+                success: true,
+                user: users[0],
+            };
+        }
+        catch (error) {
+            console.error('[AuthService] Erro ao buscar usuário:', error);
+            return {
+                success: false,
+                error: new types_1.AuthError('DATABASE_ERROR', 'Erro interno ao buscar usuário')
+            };
+        }
+    },
 };
 // Import necessário para SQL
 const drizzle_orm_2 = require("drizzle-orm");
