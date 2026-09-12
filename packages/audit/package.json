@@ -1,0 +1,24 @@
+{
+  "name": "@zero/audit",
+  "version": "0.1.0",
+  "description": "ZERO - Auditoria, Dispositivos e Alertas de Segurança",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc --build",
+    "clean": "rm -rf dist *.tsbuildinfo",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@simplewebauthn/server": "14.0.1",
+    "@zero/database": "^0.1.0",
+    "@zero/security": "^0.1.0",
+    "@zero/shared": "^0.1.0",
+    "drizzle-orm": "^0.45.2",
+    "vitest": "4.1.11"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  }
+}
