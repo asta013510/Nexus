@@ -94,5 +94,6 @@ declare class StorageService {
      */
     private streamToBuffer;
 }
+export { StorageService };
 export default StorageService;
 //# sourceMappingURL=index.d.ts.map

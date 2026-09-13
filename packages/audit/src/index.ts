@@ -5,9 +5,8 @@
  * gerenciamento de dispositivos e alertas de segurança.
  */
 
-export { AuditService } from './services/audit.service';
-export { DeviceService } from './services/device.service';
-export { AlertService } from './services/alert.service';
-export { AnomalyDetector } from './services/anomaly-detector.service';
+export { AuditService } from './services/audit.service.js';
 
-export * from './types';
+// DeviceService, AlertService e AnomalyDetector foram movidos para @zero/auth
+// Estes serviços agora fazem parte do pacote de autenticação principal
+export * from './types/index.js';

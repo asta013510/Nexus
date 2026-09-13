@@ -12,6 +12,7 @@
  * - Malware scanning hooks (future)
  */
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.StorageService = void 0;
 const client_s3_1 = require("@aws-sdk/client-s3");
 const s3_request_presigner_1 = require("@aws-sdk/s3-request-presigner");
 const crypto_1 = require("@zero/crypto");
@@ -257,5 +258,6 @@ class StorageService {
         });
     }
 }
+exports.StorageService = StorageService;
 exports.default = StorageService;
 //# sourceMappingURL=index.js.map

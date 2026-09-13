@@ -37,6 +37,8 @@ export { AuthService } from './services/auth.service';
 export { SessionService } from './services/session.service';
 export { MFAService } from './services/mfa.service';
 export { WebAuthService } from './services/webauthn.service';
+export { FacialBiometricService } from './services/facial-biometric.service';
+export { LivenessDetectionService } from './services/liveness-detection.service';
 
 // Utils
 export { generateAuthTokens, verifyJWT, decodeJWT } from './utils/tokens';

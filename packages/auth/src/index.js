@@ -20,7 +20,7 @@
  * - Sessions com expiry curto (15min access, 7d refresh)
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AUTH_CONSTANTS = exports.validateEmail = exports.validatePassword = exports.decodeJWT = exports.verifyJWT = exports.generateAuthTokens = exports.WebAuthService = exports.MFAService = exports.SessionService = exports.AuthService = void 0;
+exports.AUTH_CONSTANTS = exports.validateEmail = exports.validatePassword = exports.decodeJWT = exports.verifyJWT = exports.generateAuthTokens = exports.LivenessDetectionService = exports.FacialBiometricService = exports.WebAuthService = exports.MFAService = exports.SessionService = exports.AuthService = void 0;
 // Serviços de Autenticação
 var auth_service_1 = require("./services/auth.service");
 Object.defineProperty(exports, "AuthService", { enumerable: true, get: function () { return auth_service_1.AuthService; } });
@@ -30,6 +30,10 @@ var mfa_service_1 = require("./services/mfa.service");
 Object.defineProperty(exports, "MFAService", { enumerable: true, get: function () { return mfa_service_1.MFAService; } });
 var webauthn_service_1 = require("./services/webauthn.service");
 Object.defineProperty(exports, "WebAuthService", { enumerable: true, get: function () { return webauthn_service_1.WebAuthService; } });
+var facial_biometric_service_1 = require("./services/facial-biometric.service");
+Object.defineProperty(exports, "FacialBiometricService", { enumerable: true, get: function () { return facial_biometric_service_1.FacialBiometricService; } });
+var liveness_detection_service_1 = require("./services/liveness-detection.service");
+Object.defineProperty(exports, "LivenessDetectionService", { enumerable: true, get: function () { return liveness_detection_service_1.LivenessDetectionService; } });
 // Utils
 var tokens_1 = require("./utils/tokens");
 Object.defineProperty(exports, "generateAuthTokens", { enumerable: true, get: function () { return tokens_1.generateAuthTokens; } });

@@ -1,6 +1,6 @@
-import { db } from '@zero/database';
+import { getDb } from '@zero/database';
 import { auditLogs, users, devices, sessions } from '@zero/database/schema';
-import { eq, and, gte, lte, desc, sql } from 'drizzle-orm';
+import { eq, and, gte, lte, desc } from 'drizzle-orm';
 import type { AuditAction, AuditSeverity, AuditEvent, AuditFilters, AuditContext } from '../types';
 import { generateUUID } from '@zero/shared';
 
@@ -11,6 +11,8 @@ import { generateUUID } from '@zero/shared';
  * de forma imutável e segura.
  */
 export class AuditService {
+  private db = getDb();
+
   /**
    * Registra um novo evento de auditoria
    */
@@ -26,7 +28,7 @@ export class AuditService {
     const timestamp = new Date();
 
     try {
-      await db.insert(auditLogs).values({
+      await this.db.insert(auditLogs).values({
         id: eventId,
         userId,
         action,

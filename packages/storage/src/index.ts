@@ -374,4 +374,5 @@ class StorageService {
   }
 }
 
+export { StorageService };
 export default StorageService;
