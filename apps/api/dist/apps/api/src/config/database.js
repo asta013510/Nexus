@@ -1,0 +1,80 @@
+/**
+ * Configuração do Database - ZERO API
+ *
+ * PostgreSQL + Drizzle ORM com conexões seguras
+ * SECURITY: Pool configurado com timeouts e SSL quando em produção
+ */
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
+import { schema } from '@zero/database';
+import { getConfig, isProduction } from './env.js';
+let db = null;
+let sqlClient = null;
+/**
+ * Inicializa a conexão com o banco de dados
+ * SECURITY: Configurações hardened para produção
+ */
+export function initDatabase() {
+    if (db) {
+        return db;
+    }
+    const config = getConfig();
+    // Configuração do cliente PostgreSQL
+    sqlClient = postgres(config.DATABASE_URL, {
+        // Pool settings
+        max: 20,
+        idle_timeout: 30,
+        connect_timeout: 10,
+        // Production hardening
+        ssl: isProduction() ? { rejectUnauthorized: true } : false,
+        // Prepared statements
+        prepare: true,
+        // Debug em desenvolvimento
+        debug: process.env.NODE_ENV === 'development'
+            ? (connection, query, params, types) => {
+                console.log('[DB Query]', connection, query, params);
+            }
+            : undefined,
+    });
+    // Criar instância do Drizzle ORM
+    db = drizzle(sqlClient, { schema });
+    console.log('✅ Database conectado');
+    return db;
+}
+/**
+ * Obtém a instância do database
+ * SECURITY: Garante que database foi inicializado
+ */
+export function getDatabase() {
+    if (!db) {
+        throw new Error('Database não inicializado. Chame initDatabase() primeiro.');
+    }
+    return db;
+}
+/**
+ * Fecha a conexão com o banco (para shutdown graceful)
+ */
+export async function closeDatabase() {
+    if (sqlClient) {
+        await sqlClient.end();
+        sqlClient = null;
+        db = null;
+        console.log('🔒 Database desconectado');
+    }
+}
+/**
+ * Executa health check no database
+ */
+export async function checkDatabaseHealth() {
+    try {
+        const database = getDatabase();
+        const result = await database.execute('SELECT 1');
+        return result.length > 0;
+    }
+    catch (error) {
+        console.error('❌ Database health check failed:', error);
+        return false;
+    }
+}
+export { schema };
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZGF0YWJhc2UuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi8uLi8uLi9zcmMvY29uZmlnL2RhdGFiYXNlLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBOzs7OztHQUtHO0FBRUgsT0FBTyxFQUFFLE9BQU8sRUFBc0IsTUFBTSx5QkFBeUIsQ0FBQztBQUN0RSxPQUFPLFFBQVEsTUFBTSxVQUFVLENBQUM7QUFDaEMsT0FBTyxFQUFFLE1BQU0sRUFBRSxNQUFNLGdCQUFnQixDQUFDO0FBQ3hDLE9BQU8sRUFBRSxTQUFTLEVBQUUsWUFBWSxFQUFFLE1BQU0sVUFBVSxDQUFDO0FBRW5ELElBQUksRUFBRSxHQUE2QyxJQUFJLENBQUM7QUFDeEQsSUFBSSxTQUFTLEdBQXVDLElBQUksQ0FBQztBQUV6RDs7O0dBR0c7QUFDSCxNQUFNLFVBQVUsWUFBWTtJQUMxQixJQUFJLEVBQUUsRUFBRSxDQUFDO1FBQ1AsT0FBTyxFQUFFLENBQUM7SUFDWixDQUFDO0lBRUQsTUFBTSxNQUFNLEdBQUcsU0FBUyxFQUFFLENBQUM7SUFFM0IscUNBQXFDO0lBQ3JDLFNBQVMsR0FBRyxRQUFRLENBQUMsTUFBTSxDQUFDLFlBQVksRUFBRTtRQUN4QyxnQkFBZ0I7UUFDaEIsR0FBRyxFQUFFLEVBQUU7UUFDUCxZQUFZLEVBQUUsRUFBRTtRQUNoQixlQUFlLEVBQUUsRUFBRTtRQUVuQix1QkFBdUI7UUFDdkIsR0FBRyxFQUFFLFlBQVksRUFBRSxDQUFDLENBQUMsQ0FBQyxFQUFFLGtCQUFrQixFQUFFLElBQUksRUFBRSxDQUFDLENBQUMsQ0FBQyxLQUFLO1FBRTFELHNCQUFzQjtRQUN0QixPQUFPLEVBQUUsSUFBSTtRQUViLDJCQUEyQjtRQUMzQixLQUFLLEVBQUUsT0FBTyxDQUFDLEdBQUcsQ0FBQyxRQUFRLEtBQUssYUFBYTtZQUMzQyxDQUFDLENBQUMsQ0FBQyxVQUFVLEVBQUUsS0FBSyxFQUFFLE1BQU0sRUFBRSxLQUFLLEVBQUUsRUFBRTtnQkFDbkMsT0FBTyxDQUFDLEdBQUcsQ0FBQyxZQUFZLEVBQUUsVUFBVSxFQUFFLEtBQUssRUFBRSxNQUFNLENBQUMsQ0FBQztZQUN2RCxDQUFDO1lBQ0gsQ0FBQyxDQUFDLFNBQVM7S0FDZCxDQUFDLENBQUM7SUFFSCxpQ0FBaUM7SUFDakMsRUFBRSxHQUFHLE9BQU8sQ0FBQyxTQUFTLEVBQUUsRUFBRSxNQUFNLEVBQUUsQ0FBQyxDQUFDO0lBRXBDLE9BQU8sQ0FBQyxHQUFHLENBQUMsc0JBQXNCLENBQUMsQ0FBQztJQUVwQyxPQUFPLEVBQUUsQ0FBQztBQUNaLENBQUM7QUFFRDs7O0dBR0c7QUFDSCxNQUFNLFVBQVUsV0FBVztJQUN6QixJQUFJLENBQUMsRUFBRSxFQUFFLENBQUM7UUFDUixNQUFNLElBQUksS0FBSyxDQUFDLDJEQUEyRCxDQUFDLENBQUM7SUFDL0UsQ0FBQztJQUNELE9BQU8sRUFBRSxDQUFDO0FBQ1osQ0FBQztBQUVEOztHQUVHO0FBQ0gsTUFBTSxDQUFDLEtBQUssVUFBVSxhQUFhO0lBQ2pDLElBQUksU0FBUyxFQUFFLENBQUM7UUFDZCxNQUFNLFNBQVMsQ0FBQyxHQUFHLEVBQUUsQ0FBQztRQUN0QixTQUFTLEdBQUcsSUFBSSxDQUFDO1FBQ2pCLEVBQUUsR0FBRyxJQUFJLENBQUM7UUFDVixPQUFPLENBQUMsR0FBRyxDQUFDLDBCQUEwQixDQUFDLENBQUM7SUFDMUMsQ0FBQztBQUNILENBQUM7QUFFRDs7R0FFRztBQUNILE1BQU0sQ0FBQyxLQUFLLFVBQVUsbUJBQW1CO0lBQ3ZDLElBQUksQ0FBQztRQUNILE1BQU0sUUFBUSxHQUFHLFdBQVcsRUFBRSxDQUFDO1FBQy9CLE1BQU0sTUFBTSxHQUFHLE1BQU0sUUFBUSxDQUFDLE9BQU8sQ0FBQyxVQUFVLENBQUMsQ0FBQztRQUNsRCxPQUFPLE1BQU0sQ0FBQyxNQUFNLEdBQUcsQ0FBQyxDQUFDO0lBQzNCLENBQUM7SUFBQyxPQUFPLEtBQUssRUFBRSxDQUFDO1FBQ2YsT0FBTyxDQUFDLEtBQUssQ0FBQyxpQ0FBaUMsRUFBRSxLQUFLLENBQUMsQ0FBQztRQUN4RCxPQUFPLEtBQUssQ0FBQztJQUNmLENBQUM7QUFDSCxDQUFDO0FBRUQsT0FBTyxFQUFFLE1BQU0sRUFBRSxDQUFDIiwic291cmNlc0NvbnRlbnQiOlsiLyoqXG4gKiBDb25maWd1cmHDp8OjbyBkbyBEYXRhYmFzZSAtIFpFUk8gQVBJXG4gKiBcbiAqIFBvc3RncmVTUUwgKyBEcml6emxlIE9STSBjb20gY29uZXjDtWVzIHNlZ3VyYXNcbiAqIFNFQ1VSSVRZOiBQb29sIGNvbmZpZ3VyYWRvIGNvbSB0aW1lb3V0cyBlIFNTTCBxdWFuZG8gZW0gcHJvZHXDp8Ojb1xuICovXG5cbmltcG9ydCB7IGRyaXp6bGUsIFBvc3RncmVzSnNEYXRhYmFzZSB9IGZyb20gJ2RyaXp6bGUtb3JtL3Bvc3RncmVzLWpzJztcbmltcG9ydCBwb3N0Z3JlcyBmcm9tICdwb3N0Z3Jlcyc7XG5pbXBvcnQgeyBzY2hlbWEgfSBmcm9tICdAemVyby9kYXRhYmFzZSc7XG5pbXBvcnQgeyBnZXRDb25maWcsIGlzUHJvZHVjdGlvbiB9IGZyb20gJy4vZW52LmpzJztcblxubGV0IGRiOiBQb3N0Z3Jlc0pzRGF0YWJhc2U8dHlwZW9mIHNjaGVtYT4gfCBudWxsID0gbnVsbDtcbmxldCBzcWxDbGllbnQ6IFJldHVyblR5cGU8dHlwZW9mIHBvc3RncmVzPiB8IG51bGwgPSBudWxsO1xuXG4vKipcbiAqIEluaWNpYWxpemEgYSBjb25leMOjbyBjb20gbyBiYW5jbyBkZSBkYWRvc1xuICogU0VDVVJJVFk6IENvbmZpZ3VyYcOnw7VlcyBoYXJkZW5lZCBwYXJhIHByb2R1w6fDo29cbiAqL1xuZXhwb3J0IGZ1bmN0aW9uIGluaXREYXRhYmFzZSgpOiBQb3N0Z3Jlc0pzRGF0YWJhc2U8dHlwZW9mIHNjaGVtYT4ge1xuICBpZiAoZGIpIHtcbiAgICByZXR1cm4gZGI7XG4gIH1cblxuICBjb25zdCBjb25maWcgPSBnZXRDb25maWcoKTtcblxuICAvLyBDb25maWd1cmHDp8OjbyBkbyBjbGllbnRlIFBvc3RncmVTUUxcbiAgc3FsQ2xpZW50ID0gcG9zdGdyZXMoY29uZmlnLkRBVEFCQVNFX1VSTCwge1xuICAgIC8vIFBvb2wgc2V0dGluZ3NcbiAgICBtYXg6IDIwLFxuICAgIGlkbGVfdGltZW91dDogMzAsXG4gICAgY29ubmVjdF90aW1lb3V0OiAxMCxcbiAgICBcbiAgICAvLyBQcm9kdWN0aW9uIGhhcmRlbmluZ1xuICAgIHNzbDogaXNQcm9kdWN0aW9uKCkgPyB7IHJlamVjdFVuYXV0aG9yaXplZDogdHJ1ZSB9IDogZmFsc2UsXG4gICAgXG4gICAgLy8gUHJlcGFyZWQgc3RhdGVtZW50c1xuICAgIHByZXBhcmU6IHRydWUsXG4gICAgXG4gICAgLy8gRGVidWcgZW0gZGVzZW52b2x2aW1lbnRvXG4gICAgZGVidWc6IHByb2Nlc3MuZW52Lk5PREVfRU5WID09PSAnZGV2ZWxvcG1lbnQnIFxuICAgICAgPyAoY29ubmVjdGlvbiwgcXVlcnksIHBhcmFtcywgdHlwZXMpID0+IHtcbiAgICAgICAgICBjb25zb2xlLmxvZygnW0RCIFF1ZXJ5XScsIGNvbm5lY3Rpb24sIHF1ZXJ5LCBwYXJhbXMpO1xuICAgICAgICB9XG4gICAgICA6IHVuZGVmaW5lZCxcbiAgfSk7XG5cbiAgLy8gQ3JpYXIgaW5zdMOibmNpYSBkbyBEcml6emxlIE9STVxuICBkYiA9IGRyaXp6bGUoc3FsQ2xpZW50LCB7IHNjaGVtYSB9KTtcblxuICBjb25zb2xlLmxvZygn4pyFIERhdGFiYXNlIGNvbmVjdGFkbycpO1xuXG4gIHJldHVybiBkYjtcbn1cblxuLyoqXG4gKiBPYnTDqW0gYSBpbnN0w6JuY2lhIGRvIGRhdGFiYXNlXG4gKiBTRUNVUklUWTogR2FyYW50ZSBxdWUgZGF0YWJhc2UgZm9pIGluaWNpYWxpemFkb1xuICovXG5leHBvcnQgZnVuY3Rpb24gZ2V0RGF0YWJhc2UoKTogUG9zdGdyZXNKc0RhdGFiYXNlPHR5cGVvZiBzY2hlbWE+IHtcbiAgaWYgKCFkYikge1xuICAgIHRocm93IG5ldyBFcnJvcignRGF0YWJhc2UgbsOjbyBpbmljaWFsaXphZG8uIENoYW1lIGluaXREYXRhYmFzZSgpIHByaW1laXJvLicpO1xuICB9XG4gIHJldHVybiBkYjtcbn1cblxuLyoqXG4gKiBGZWNoYSBhIGNvbmV4w6NvIGNvbSBvIGJhbmNvIChwYXJhIHNodXRkb3duIGdyYWNlZnVsKVxuICovXG5leHBvcnQgYXN5bmMgZnVuY3Rpb24gY2xvc2VEYXRhYmFzZSgpOiBQcm9taXNlPHZvaWQ+IHtcbiAgaWYgKHNxbENsaWVudCkge1xuICAgIGF3YWl0IHNxbENsaWVudC5lbmQoKTtcbiAgICBzcWxDbGllbnQgPSBudWxsO1xuICAgIGRiID0gbnVsbDtcbiAgICBjb25zb2xlLmxvZygn8J+UkiBEYXRhYmFzZSBkZXNjb25lY3RhZG8nKTtcbiAgfVxufVxuXG4vKipcbiAqIEV4ZWN1dGEgaGVhbHRoIGNoZWNrIG5vIGRhdGFiYXNlXG4gKi9cbmV4cG9ydCBhc3luYyBmdW5jdGlvbiBjaGVja0RhdGFiYXNlSGVhbHRoKCk6IFByb21pc2U8Ym9vbGVhbj4ge1xuICB0cnkge1xuICAgIGNvbnN0IGRhdGFiYXNlID0gZ2V0RGF0YWJhc2UoKTtcbiAgICBjb25zdCByZXN1bHQgPSBhd2FpdCBkYXRhYmFzZS5leGVjdXRlKCdTRUxFQ1QgMScpO1xuICAgIHJldHVybiByZXN1bHQubGVuZ3RoID4gMDtcbiAgfSBjYXRjaCAoZXJyb3IpIHtcbiAgICBjb25zb2xlLmVycm9yKCfinYwgRGF0YWJhc2UgaGVhbHRoIGNoZWNrIGZhaWxlZDonLCBlcnJvcik7XG4gICAgcmV0dXJuIGZhbHNlO1xuICB9XG59XG5cbmV4cG9ydCB7IHNjaGVtYSB9O1xuIl19
